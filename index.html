@@ -34,75 +34,38 @@
 
 <main>
   <section id="research" class="wrap">
-    <h2>Research &amp; projects</h2>
-    <p class="section-lede">Our work runs on two tracks: autonomy for ground vehicles in harsh conditions, and optics for sensing and communicating through turbulent media.</p>
-
-    <!--
-      Project card template: copy into the .cards grid of the matching track.
-      Set the status to "Current" or "Past".
-
-      <article class="card project">
-        <p class="status">Current</p>
-        <h3>Project title</h3>
-        <p>One or two sentences on the problem and approach.</p>
-        <p class="meta">Sponsor · Years · <a href="#">Paper / video / code</a></p>
+    <h2>Research</h2>
+    <div class="cards">
+      <article class="card">
+        <h3>Autonomy in winter weather</h3>
+        <p>How snow, ice, and cold change what autonomous vehicles can sense and how they should drive, from lidar clutter to control on low-friction surfaces.</p>
       </article>
-    -->
-
-    <div class="track track-autonomy">
-      <header class="track-head">
-        <p class="track-tag">Track 1</p>
-        <h3>Autonomy</h3>
-      </header>
-      <div class="track-body">
-        <div class="cards">
-          <article class="card">
-            <h4>Autonomy in winter weather</h4>
-            <p>How snow, ice, and cold change what autonomous vehicles can sense and how they should drive, from lidar clutter to control on low-friction surfaces.</p>
-          </article>
-          <article class="card">
-            <h4>Lidar perception &amp; metrology</h4>
-            <p>Measuring lidar range error and uncertainty, benchmarking automotive sensors, and making perception work in degraded conditions.</p>
-          </article>
-          <article class="card">
-            <h4>Off-road mobility &amp; planning</h4>
-            <p>Terrain assessment, point-cloud path planning, and multi-robot coordination for ground vehicles in unstructured environments.</p>
-          </article>
-        </div>
-        <figure class="track-fig">
-          <img src="assets/autodrive_bolt.jpg" alt="Michigan Tech's autonomous Chevrolet Bolt with a roof-mounted lidar, parked on a snowy campus plaza" width="900" height="602" loading="lazy">
-          <figcaption>Michigan Tech's AutoDrive Challenge vehicle</figcaption>
-        </figure>
-      </div>
+      <article class="card">
+        <h3>Lidar perception &amp; metrology</h3>
+        <p>Measuring lidar range error and uncertainty, benchmarking automotive sensors, and making perception work in degraded conditions.</p>
+      </article>
+      <article class="card">
+        <h3>Off-road mobility &amp; planning</h3>
+        <p>Terrain assessment, point-cloud path planning, and multi-robot coordination for ground vehicles in unstructured environments.</p>
+      </article>
+      <article class="card">
+        <h3>Atmospheric &amp; underwater optics</h3>
+        <p>Optical turbulence, imaging through the atmosphere, beam control, and free-space and underwater optical communication.</p>
+      </article>
     </div>
-
-    <div class="track track-optics">
-      <header class="track-head">
-        <p class="track-tag">Track 2</p>
-        <h3>Atmospheric optics</h3>
-      </header>
-      <div class="track-body">
-        <div class="cards">
-          <article class="card">
-            <h4>Optical turbulence &amp; imaging</h4>
-            <p>Characterizing optical turbulence and imaging through the atmosphere, including wave-optics simulation of propagation paths.</p>
-          </article>
-          <article class="card">
-            <h4>Beam control &amp; optical communication</h4>
-            <p>Beam control and free-space and underwater optical communication through turbulent media.</p>
-          </article>
-        </div>
-        <div class="track-figs">
-          <figure>
-            <video data-src="assets/beam_turbulence.mp4" poster="assets/beam_turbulence.jpg" autoplay loop muted playsinline width="538" height="538" aria-label="Animated laser beam intensity pattern fluctuating as it propagates through atmospheric turbulence"></video>
-            <figcaption>Laser beam propagation through turbulence</figcaption>
-          </figure>
-          <figure>
-            <video data-src="assets/underwater_imaging.mp4" poster="assets/underwater_imaging.jpg" autoplay loop muted playsinline width="256" height="256" aria-label="Animated view of fish behind netting, distorted by moving water"></video>
-            <figcaption>Imaging through turbulent water</figcaption>
-          </figure>
-        </div>
-      </div>
+    <div class="media">
+      <figure>
+        <img src="assets/autodrive_bolt.jpg" alt="Michigan Tech's autonomous Chevrolet Bolt with a roof-mounted lidar, parked on a snowy campus plaza" width="900" height="602" loading="lazy">
+        <figcaption>Michigan Tech's AutoDrive Challenge vehicle</figcaption>
+      </figure>
+      <figure>
+        <video data-src="assets/beam_turbulence.mp4" poster="assets/beam_turbulence.jpg" autoplay loop muted playsinline width="538" height="538" aria-label="Animated laser beam intensity pattern fluctuating as it propagates through atmospheric turbulence"></video>
+        <figcaption>Laser beam propagation through turbulence</figcaption>
+      </figure>
+      <figure>
+        <video data-src="assets/underwater_imaging.mp4" poster="assets/underwater_imaging.jpg" autoplay loop muted playsinline width="256" height="256" aria-label="Animated view of fish behind netting, distorted by moving water"></video>
+        <figcaption>Imaging through turbulent water</figcaption>
+      </figure>
     </div>
   </section>
 

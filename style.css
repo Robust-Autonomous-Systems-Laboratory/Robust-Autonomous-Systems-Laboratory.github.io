@@ -7,12 +7,6 @@
   --muted: #5d6068;
   --line: #dddcd4;
   --link: #8a6a00;
-  --autonomy: #ffcd00;
-  --autonomy-ink: #6b5200;
-  --autonomy-wash: #fff8dc;
-  --optics: #1f8fa8;
-  --optics-ink: #0d5f72;
-  --optics-wash: #e3f3f6;
   --radius: 14px;
   --max: 1120px;
 }
@@ -24,11 +18,6 @@
     --muted: #a4a6ad;
     --line: #2c2e33;
     --link: #ffcd00;
-    --autonomy-ink: #ffcd00;
-    --autonomy-wash: #221e10;
-    --optics: #4cc3dc;
-    --optics-ink: #7fd8ea;
-    --optics-wash: #10222a;
   }
 }
 
@@ -42,10 +31,9 @@ body {
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--link); text-underline-offset: 2px; }
-h1, h2, h3, h4 { font-family: "Space Grotesk", Inter, sans-serif; line-height: 1.1; margin: 0 0 .5em; }
+h1, h2, h3 { font-family: "Space Grotesk", Inter, sans-serif; line-height: 1.1; margin: 0 0 .5em; }
 h2 { font-size: clamp(1.6rem, 3.2vw, 2.2rem); letter-spacing: -.01em; }
 h3 { font-size: 1.15rem; }
-h4 { font-size: 1.1rem; }
 p { margin: 0 0 1em; }
 
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
@@ -64,31 +52,10 @@ section.band { background: var(--paper-2); }
 .hero-fig img { border-radius: var(--radius); }
 .hero-fig figcaption { color: #8e9097; font-size: .85rem; margin-top: 8px; }
 
-/* Research tracks */
-.section-lede { color: var(--muted); max-width: 46em; }
-.track { --accent: var(--autonomy); --accent-ink: var(--autonomy-ink); --wash: var(--autonomy-wash);
-  margin-top: 36px; border-left: 4px solid var(--accent); padding-left: 20px; }
-.track-optics { --accent: var(--optics); --accent-ink: var(--optics-ink); --wash: var(--optics-wash); }
-.track-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
-.track-head h3 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); margin: 0; }
-.track-tag { margin: 0; font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--accent-ink); background: var(--wash); border-radius: 999px; padding: 3px 10px; }
-.track-body { display: grid; gap: 18px; }
-@media (min-width: 900px) { .track-body { grid-template-columns: 2.3fr 1fr; align-items: start; } }
-
-.cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-.card { border: 1px solid var(--line); border-top: 3px solid var(--accent, var(--gold)); border-radius: var(--radius); padding: 22px; background: var(--paper); }
+/* Research cards */
+.cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.card { border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: var(--radius); padding: 22px; background: var(--paper); }
 .card p { color: var(--muted); margin: 0; }
-.track-optics .card { background: var(--wash); }
-.card .status { display: inline-block; margin-bottom: 8px; font-size: .72rem; font-weight: 600; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--accent-ink); }
-.card .meta { margin-top: 10px; font-size: .88rem; }
-
-.track figure { margin: 0; }
-.track img, .track video { display: block; width: 100%; height: auto; border-radius: var(--radius); background: #000; }
-.track-figs { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
-.track-figs video { aspect-ratio: 1 / 1; object-fit: cover; }
-.track figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
 
 /* Data & software */
 .links { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px 32px; }
@@ -115,3 +82,15 @@ section.band { background: var(--paper-2); }
 .alumni-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px 32px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 .alumni-list li { padding: 10px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+
+/* Research media strip */
+.media { display: grid; gap: 18px; margin-top: 28px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .media { grid-template-columns: 1.5fr 1fr 1fr; } }
+.media figure { margin: 0; }
+.media img, .media video {
+  display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover;
+  border-radius: var(--radius); background: #000;
+}
+@media (min-width: 720px) { .media img { aspect-ratio: auto; height: 100%; max-height: none; } .media figure:first-child { display: flex; flex-direction: column; } .media figure:first-child img { flex: 1; min-height: 0; } }
+.media figure:first-child img { aspect-ratio: 3 / 2; }
+.media figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
