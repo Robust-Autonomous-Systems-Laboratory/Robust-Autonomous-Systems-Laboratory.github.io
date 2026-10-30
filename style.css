@@ -51,6 +51,9 @@ section.band { background: var(--paper-2); }
 .hero-fig { margin: 0; }
 .hero-fig img { border-radius: var(--radius); }
 .hero-fig figcaption { color: #8e9097; font-size: .85rem; margin-top: 8px; }
+.hero-fig figcaption a { color: var(--gold); }
+.hero-link { display: block; border-radius: var(--radius); transition: box-shadow .2s, transform .2s; }
+.hero-link:hover, .hero-link:focus-visible { box-shadow: 0 0 0 3px var(--gold); transform: translateY(-2px); }
 
 /* Research cards */
 .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
