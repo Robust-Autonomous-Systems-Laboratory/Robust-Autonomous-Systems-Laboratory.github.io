@@ -97,3 +97,12 @@ section.band { background: var(--paper-2); }
 @media (min-width: 720px) { .media img { aspect-ratio: auto; height: 100%; max-height: none; } .media figure:first-child { display: flex; flex-direction: column; } .media figure:first-child img { flex: 1; min-height: 0; } }
 .media figure:first-child img { aspect-ratio: 3 / 2; }
 .media figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
+
+/* Projects */
+.sub { font-size: 1.4rem; margin-top: 48px; }
+.project { display: grid; gap: 24px; align-items: center; border-top: 3px solid var(--gold); padding-top: 22px; }
+@media (min-width: 800px) { .project { grid-template-columns: 1fr 1.4fr; } }
+.project figure { margin: 0; }
+.project img { border-radius: var(--radius); background: #000; }
+.project figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
+.project p { color: var(--muted); }
