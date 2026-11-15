@@ -45,6 +45,7 @@ section.band { background: var(--paper-2); }
 .hero { background: var(--ink); color: #f4f3ee; padding: 56px 0 64px; border-bottom: 4px solid var(--gold); }
 .hero-grid { display: grid; gap: 36px; align-items: center; }
 @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr 1fr; } }
+.logo { width: 88px; height: 88px; border-radius: 18px; margin-bottom: 20px; }
 .eyebrow { color: var(--gold); font-weight: 600; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; }
 .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); letter-spacing: -.02em;; color: #8e9097; }
 .hero h1 .ini { color: #f4f3ee; }
