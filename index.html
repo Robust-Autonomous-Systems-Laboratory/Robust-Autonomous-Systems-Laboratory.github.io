@@ -89,6 +89,20 @@
         <p>White-nose syndrome has killed millions of bats in North America. To help fight it, we are using sensors developed for autonomous vehicles (thermal, near-infrared, and color cameras) to count hibernating bats and map where they roost inside mines. One theory is that bats prefer colder parts of a mine, where white-nose syndrome is less likely to take hold. Knowing exactly where they roost lets us test that idea.</p>
       </div>
     </article>
+    <article class="project">
+      <figure>
+        <picture>
+          <source type="image/webp" srcset="assets/lidar_snow_700.webp 700w, assets/lidar_snow_1100.webp 1100w" sizes="(min-width: 800px) 420px, 100vw">
+          <img src="assets/lidar_snow_700.jpg" srcset="assets/lidar_snow_700.jpg 700w, assets/lidar_snow_1100.jpg 1100w" sizes="(min-width: 800px) 420px, 100vw" alt="Lidar sensor on a tripod in a snow-covered lot, aimed down a measuring tape toward a pedestrian-shaped target" width="1280" height="720" loading="lazy">
+        </picture>
+        <figcaption>Measuring lidar range performance in snow</figcaption>
+      </figure>
+      <div>
+        <h3>Lidar uncertainty modeling</h3>
+        <p>How much can you trust a lidar range measurement, and how does that change in rain, snow, or fog? We are building tools for automotive lidar metrology: a Python application that extracts points on planar targets from recorded scans, trims noisy edge returns with iteratively reweighted least squares, and reports the repeatability (Type A uncertainty) of each sensor. Next, we will compare those baselines against data taken in adverse weather.</p>
+        <p><a href="https://github.com/Robust-Autonomous-Systems-Laboratory/lidar-uncertainty-modeling">View the code on GitHub</a></p>
+      </div>
+    </article>
   </section>
 
   <section id="resources" class="band">

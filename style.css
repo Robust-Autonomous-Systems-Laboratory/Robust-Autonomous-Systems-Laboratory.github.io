@@ -108,6 +108,7 @@ section.band { background: var(--paper-2); }
 .sub { font-size: 1.4rem; margin-top: 48px; }
 .project { display: grid; gap: 24px; align-items: center; border-top: 3px solid var(--gold); padding-top: 22px; }
 @media (min-width: 800px) { .project { grid-template-columns: 1fr 1.4fr; } }
+.project + .project { margin-top: 40px; }
 .project figure { margin: 0; }
 .project img { border-radius: var(--radius); background: #000; }
 .project figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
