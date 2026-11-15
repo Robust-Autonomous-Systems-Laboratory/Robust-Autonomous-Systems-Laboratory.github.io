@@ -114,3 +114,4 @@ section.band { background: var(--paper-2); }
 .project video { display: block; width: 100%; height: auto; border-radius: var(--radius); background: #000; }
 .project figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
 .project p { color: var(--muted); }
+.project .who { color: var(--text); font-size: .9rem; font-weight: 600; margin: -4px 0 0; }
