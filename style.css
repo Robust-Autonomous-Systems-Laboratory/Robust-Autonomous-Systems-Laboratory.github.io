@@ -111,5 +111,6 @@ section.band { background: var(--paper-2); }
 .project + .project { margin-top: 40px; }
 .project figure { margin: 0; }
 .project img { border-radius: var(--radius); background: #000; }
+.project video { display: block; width: 100%; height: auto; border-radius: var(--radius); background: #000; }
 .project figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
 .project p { color: var(--muted); }
