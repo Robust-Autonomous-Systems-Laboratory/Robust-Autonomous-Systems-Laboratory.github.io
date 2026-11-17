@@ -112,6 +112,8 @@ section.band { background: var(--paper-2); }
 .project figure { margin: 0; }
 .project img { border-radius: var(--radius); background: #000; }
 .project video { display: block; width: 100%; height: auto; border-radius: var(--radius); background: #000; }
+.fig-link { display: block; border-radius: var(--radius); transition: box-shadow .2s, transform .2s; }
+.fig-link:hover, .fig-link:focus-visible { box-shadow: 0 0 0 3px var(--gold); transform: translateY(-2px); }
 .project figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
 .project p { color: var(--muted); }
 .project .who { color: var(--text); font-size: .9rem; font-weight: 600; margin: -4px 0 0; }

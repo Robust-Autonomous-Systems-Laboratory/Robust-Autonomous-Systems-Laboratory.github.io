@@ -92,13 +92,15 @@
     </article>
     <article class="project">
       <figure>
-        <video data-src="assets/RASL/slide-512.mp4" poster="assets/lidar_snow_700.jpg" autoplay loop muted playsinline width="512" height="288" aria-label="Lidar sensor on a tripod in a snow-covered lot, aimed down a measuring tape at an NCAP pedestrian dummy crossing its path"></video>
+        <a class="fig-link" href="https://robust-autonomous-systems-laboratory.github.io/lidar-uncertainty-modeling/" aria-label="Lidar uncertainty modeling project site">
+          <video data-src="assets/RASL/slide-512.mp4" poster="assets/lidar_snow_700.jpg" autoplay loop muted playsinline width="512" height="288" aria-label="Lidar sensor on a tripod in a snow-covered lot, aimed down a measuring tape at an NCAP pedestrian dummy crossing its path"></video>
+        </a>
         <figcaption>Measuring lidar range performance in snow with an NCAP pedestrian dummy</figcaption>
       </figure>
       <div>
         <h3>Lidar uncertainty modeling</h3>
         <p class="who">PhD student: Ian Mattson</p>
-        <p>How much can you trust a lidar range measurement, and how does that change in rain, snow, or fog? We are building tools for automotive lidar metrology: a Python application that extracts points on planar targets from recorded scans, trims noisy edge returns with iteratively reweighted least squares, and reports the repeatability (Type A uncertainty) of each sensor. Next, we will compare those baselines against data taken in adverse weather.</p>
+        <p>Manufacturers typically quote automotive lidar range uncertainty at 2 to 5&nbsp;cm, but fog, snow, and rain add clutter and false returns. How much can you trust a lidar range measurement in bad weather? Our <a href="https://robust-autonomous-systems-laboratory.github.io/lidar-uncertainty-modeling/">guide to automotive lidar uncertainty</a> explains where range uncertainty comes from and lays out a field experiment, based on the DIN SAE 91471 cross-domain test, that practitioners can set up at a temporary site such as a parking lot. NIST-traceable targets with 10% and 80% reflectivity stand at distances from 15&nbsp;m to 100&nbsp;m. Repeated clear-weather trials set a baseline. A one-way ANOVA then compares trials in snow, sleet, rain, fog, direct sun, and wildfire smoke against that baseline to isolate what each condition adds.</p>
         <p><a href="https://github.com/Robust-Autonomous-Systems-Laboratory/lidar-uncertainty-modeling">View the code on GitHub</a></p>
       </div>
     </article>
