@@ -111,6 +111,9 @@ section.band { background: var(--paper-2); }
 }
 @media (min-width: 720px) { .media img { aspect-ratio: auto; height: 100%; max-height: none; } .media figure:first-child { display: flex; flex-direction: column; } .media figure:first-child img { flex: 1; min-height: 0; } }
 .media figure:first-child img { aspect-ratio: 3 / 2; }
+/* The beam clip has a thin white frame baked in; crop a few pixels off every edge. */
+.media .trim { overflow: hidden; border-radius: var(--radius); background: #000; }
+.media .trim video { width: calc(100% + 8px); max-width: none; margin: -4px; border-radius: 0; }
 .media figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
 
 /* Projects */
