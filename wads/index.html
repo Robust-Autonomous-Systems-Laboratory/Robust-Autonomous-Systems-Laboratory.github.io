@@ -1,0 +1,287 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>WADS Winter Driving Data</title>
+<link rel="icon" href="../assets/RASL/flame-avatar-square.svg" type="image/svg+xml">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 1080px reading column; a road-sign-like condensed display face; data sits in mono. Sections stack, galleries wrap to one column on phones. */
+:root {
+  --bg: #f3f5f8; --surface: #ffffff; --ink: #141a24; --ink-2: #465163; --ink-3: #6f7a8c;
+  --rule: #d9dee6; --track: #e6eaf0; --accent: #e8590c; --accent-ink: #b8460a; --bar: #4c6a92; --bar-2: #93a8c4;
+  --chip: #eaeef4;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e8edf4; --ink-2: #b2bccb; --ink-3: #8592a5;
+  --rule: #273142; --track: #222b39; --accent: #ff7a33; --accent-ink: #ff9a5e; --bar: #7d9cc6; --bar-2: #4a6185; --chip: #1f2835; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e8edf4; --ink-2: #b2bccb; --ink-3: #8592a5;
+  --rule: #273142; --track: #222b39; --accent: #ff7a33; --accent-ink: #ff9a5e; --bar: #7d9cc6; --bar-2: #4a6185; --chip: #1f2835; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.6 var(--f-body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 64px; display: grid; gap: 64px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h1 { font-size: clamp(44px, 7vw, 76px); line-height: .95; font-weight: 700; text-transform: uppercase; }
+h2 { font-size: 32px; line-height: 1.05; font-weight: 600; text-transform: uppercase; }
+h3 { font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+p { margin: 0; max-width: 68ch; }
+.muted { color: var(--ink-2); }
+.small { font-size: 13px; color: var(--ink-3); }
+.eyebrow { font: 500 12px/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.mono { font-family: var(--f-mono); }
+section { display: grid; gap: 20px; }
+.head { display: grid; gap: 10px; }
+/* hero */
+.hero { display: grid; gap: 18px; }
+.hero h1 span { color: var(--accent); }
+.lede { font-size: 18px; color: var(--ink-2); max-width: 62ch; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin-top: 8px; }
+.stat { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; }
+.stat b { font: 600 30px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12.5px; color: var(--ink-3); }
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 860px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .gallery { grid-template-columns: 1fr; } }
+figure { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+figure a { display: block; border-radius: 4px; overflow: hidden; background: #000; }
+figure a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+figure img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+figcaption { display: grid; gap: 6px; }
+figcaption strong { font: 600 17px/1.2 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font: 500 11px/1 var(--f-mono); padding: 4px 6px; border-radius: 3px; background: var(--chip); color: var(--ink-2); }
+.quote { font-size: 13px; color: var(--ink-2); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+/* bar lists */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px 32px; }
+.bars { display: grid; gap: 7px; }
+.bar { display: grid; grid-template-columns: 112px minmax(0, 1fr) 48px; gap: 10px; align-items: center; font-size: 13px; }
+.bar .t { height: 10px; background: var(--track); border-radius: 0 4px 4px 0; overflow: hidden; }
+.bar .t i { display: block; height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; }
+.bar .v { font: 500 12px var(--f-mono); text-align: right; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.bar .k { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* lidar */
+.bev { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 560px) { .bev { grid-template-columns: 1fr; } }
+.bev figure > div { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; position: relative; }
+.bev img { display: block; width: 100%; height: auto; aspect-ratio: 1; }
+.bev .tag { position: absolute; left: 14px; top: 12px; font: 600 26px/1 var(--f-display); }
+.bev .tag small { display: block; font: 500 11px/1.4 var(--f-mono); color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 18px 18px 12px; min-width: 0; }
+.chart { overflow-x: auto; }
+.chart svg { display: block; width: 100%; min-width: 520px; height: auto; }
+.chart text { font-family: var(--f-body); fill: var(--ink-2); font-size: 12px; }
+.chart .tick { font-family: var(--f-mono); fill: var(--ink-3); font-size: 11px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile { border-top: 3px solid var(--bar); padding-top: 8px; display: grid; gap: 4px; }
+.tile.hot { border-color: var(--accent); }
+.tile b { font: 600 34px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.tile span { font-size: 13px; color: var(--ink-2); }
+/* table */
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 13.5px; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 500 11px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); background: var(--bg); position: sticky; top: 0; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-size: 12.5px; }
+tr:last-child td { border-bottom: 0; }
+.snow { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; width: 100%; }
+.snow i { display: inline-block; height: 8px; background: var(--accent); border-radius: 0 3px 3px 0; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; counter-reset: s; }
+.step { display: grid; gap: 6px; align-content: start; }
+.step h3::before { counter-increment: s; content: counter(s) " "; color: var(--accent); }
+.home { font: 500 12px/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; justify-self: start; }
+.home:hover, .home:focus-visible { color: var(--accent); }
+footer { border-top: 1px solid var(--rule); padding-top: 18px; display: grid; gap: 6px; }
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12.5px; line-height: 1.45; padding: 8px 10px; border-radius: 4px; max-width: 260px; }
+@media (prefers-reduced-motion: no-preference) { figure a img { transition: transform .4s ease; } figure a:hover img { transform: scale(1.03); } }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <a class="home" href="../">← Robust Autonomous Systems Lab</a>
+    <div class="eyebrow">Keweenaw Peninsula, Michigan · winters 2020–2025</div>
+    <h1>WADS <span>Winter</span> Driving Data</h1>
+    <p class="lede">The Winter Adverse Driving dataSet is a multi-sensor record of driving through lake-effect snow on the Keweenaw Peninsula: cameras, up to nine kinds of lidar, radar and GPS, recorded as ROS bags over four winters. This page summarizes what is in it so far, from automatic scene labels on the camera frames, the share of each lidar scan that is falling snow, and the weather at the nearest airport for every recording.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Camera labels</div>
+      <h2>What the cameras saw</h2>
+      <p class="muted">Every camera frame was sampled once per second and labelled with object boxes and scene tags by a vision-language model (Claude Haiku), and about 20,000 of the hardest frames got a second pass from a larger model (Claude Sonnet). The examples below show the second-pass labels. These are pre-labels for human review, not ground truth. People, faces and licence plates are blurred.</p>
+    </div>
+    <div class="legend" id="boxlegend"></div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Scene tags</div>
+      <h2>Mostly snowing, often hard to see</h2>
+      <p class="muted" id="tagnote"></p>
+    </div>
+    <div class="cols" id="tagcols"></div>
+    <div class="card" style="display:grid;gap:12px">
+      <h3>Objects labelled</h3>
+      <p class="small" id="objnote"></p>
+      <div class="bars" id="objbars"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Lidar</div>
+      <h2>Measuring snow in the point cloud</h2>
+      <p class="muted">Falling snow shows up in lidar as isolated returns close to the sensor. A dynamic statistical outlier filter (DSOR: k = 5, std = 0.1, range multiplier = 0.1) flags them, and the share of returns it removes is a direct, per-second measure of how hard it is snowing at the car. Orange points below are the ones the filter removed from one 360° scan, 40 m around the vehicle.</p>
+    </div>
+    <div class="bev" id="bev"></div>
+    <div class="card" style="display:grid;gap:10px">
+      <h3>Snow share by lidar type</h3>
+      <p class="small">Per-scan % of returns removed by DSOR, one scan per second, first and last minute of every drive excluded. Box = middle half, line = 10th–90th percentile, dot = median. Hover a row for counts.</p>
+      <div class="chart" id="sensorchart"></div>
+    </div>
+    <div class="card" style="display:grid;gap:10px">
+      <h3>Against public winter datasets</h3>
+      <p class="small">The same filter run on the full WADS collection and on two public datasets. Boreas (Toronto) records mostly clear or lightly snowing air; its one snowstorm looks like a typical WADS scan.</p>
+      <div class="chart" id="cmpchart"></div>
+    </div>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Weather · KCMX</div>
+      <h2>Conditions on each recording day</h2>
+      <p class="muted">Every bag carries the NWS surface observations from Houghton County Memorial Airport (KCMX) during the recording, plus the National Blend of Models snowfall forecast issued at least an hour before it. Temperature, humidity and pressure here are from the report nearest each bag; forecast snow is the day's total from the last forecast run before the drive.</p>
+    </div>
+    <div class="tablewrap"><table id="wx"></table></div>
+    <p class="small">The airport is one point. Lake-effect snow along a drive can be much heavier or lighter than at KCMX, which is why the lidar measure above matters. Source: Iowa Environmental Mesonet ASOS and NBM archives.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Pipeline</div>
+      <h2>How the data is processed</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><h3>Index</h3><p class="small">Bags are read through their trailing index only, so a 100 GB bag can be cataloged in seconds. Drives are grouped by time, and duplicate copies are detected.</p></div>
+      <div class="step"><h3>Label</h3><p class="small">One frame per second per camera, labelled with boxes and scene tags; hard frames get a second opinion. Results are cached and reproducible.</p></div>
+      <div class="step"><h3>Lidar snow</h3><p class="small">DSOR runs on one scan per second for every lidar, and filtered copies of every bag are written alongside the originals.</p></div>
+      <div class="step"><h3>Weather</h3><p class="small">Airport observations and archived forecasts are attached to each bag as metadata.</p></div>
+      <div class="step"><h3>Georeference</h3><p class="small">In progress: placing the 2021 drives, which have no GPS, from lidar odometry, image matches to other years and the road network. Validation on a 2022 drive with its GPS hidden: 3.7 m median error.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="eyebrow">Winter Adverse Driving dataSet (WADS)</div>
+    <p class="small"><a href="../" style="color:inherit">Robust Autonomous Systems Laboratory</a>, Michigan Tech. Numbers on this page are computed from the full collection on the lab's bag server (237 unique bags). Model labels are automatic and will contain errors.</p>
+  </footer>
+</div>
+<div id="tip" hidden></div>
+<script type="application/json" id="data">{"frames": [{"file": "frame0.jpg", "caption": "Snowplow, 2020 fisheye camera", "drive": "20200227_2020_Feb_27_CAL2APS", "utc": 1582837308.7046986, "scene": {"weather": "overcast", "lighting": "daylight", "visibility": "good", "road_surface": "partial_snow", "road_type": "highway"}, "summary": "Monochrome fisheye view from a vehicle on a snowy two-direction highway where a snowplow/salt truck passes in the adjacent lane on the left, with distant cars ahead and a snow-covered shoulder on the right.", "objects": {"snowplow": 1, "car": 3}, "w": 1200, "h": 900}, {"file": "frame1.jpg", "caption": "Oncoming traffic in heavy snow", "drive": "20220222_Feb_22_H2APS", "utc": 1645569398.093084, "scene": {"weather": "blowing_snow", "lighting": "daylight", "visibility": "poor", "road_surface": "partial_snow", "road_type": "rural_two_lane"}, "summary": "Blowing snow and fog reduce visibility on a two-lane road with wind-streaked partial snow cover, high snowbanks on the right, and a plow-equipped pickup passing on the left with another vehicle's headlights glowing in the distance.", "objects": {"snowplow": 1, "car": 1, "traffic_sign": 1}, "w": 1200, "h": 900}, {"file": "frame2.jpg", "caption": "Town street, heavy snow", "drive": "20220105_AMK2CLM", "utc": 1641406544.8185256, "scene": {"weather": "heavy_snow", "lighting": "daylight", "visibility": "poor", "road_surface": "partial_snow", "road_type": "urban_street"}, "summary": "Snowy urban highway approaching a signalized intersection with a yellow light, two vehicles ahead, windblown snow across partially cleared pavement and tall snowbanks along the roadside.", "objects": {"car": 2, "traffic_light": 1, "traffic_sign": 5}, "w": 1200, "h": 900}, {"file": "frame3.jpg", "caption": "Night, lit forecourt", "drive": "20220222_Feb_22_MHK2Cali", "utc": 1645572612.10978, "scene": {"weather": "light_snow", "lighting": "night_lit", "visibility": "moderate", "road_surface": "snow_covered", "road_type": "parking_lot"}, "summary": "Snow-covered gas station forecourt at night under a lit canopy, with an SUV and a sedan parked in front of the store and a pedestrian walking near the entrance in light falling snow.", "objects": {"car": 3, "pedestrian": 1, "license_plate": 1, "traffic_sign": 1}, "w": 1200, "h": 1004}, {"file": "frame4.jpg", "caption": "Whiteout", "drive": "20200212_2020_Feb_12_CAL2APS_2", "utc": 1581537100.4804802, "scene": {"weather": "fog", "lighting": "daylight", "visibility": "very_poor", "road_surface": "snow_covered", "road_type": "rural_two_lane"}, "summary": "Dense fog or blowing snow on a snow-covered rural two-lane road with dark wheel tracks, tree lines on both sides, and two faint vehicles far ahead near the vanishing point.", "objects": {"car": 2}, "w": 1200, "h": 1004}, {"file": "frame5.jpg", "caption": "Blowing snow on a rural two-lane", "drive": "20200212_2020_Feb_12_CAL2APS", "utc": 1581536977.0148153, "scene": {"weather": "blowing_snow", "lighting": "daylight", "visibility": "very_poor", "road_surface": "partial_snow", "road_type": "rural_two_lane"}, "summary": "Heavy blowing snow and whiteout haze on a rural two-lane road with a partly snow-covered surface, with a car ahead in the lane and another vehicle further ahead on the left side, power lines and trees fading into the haze.", "objects": {"car": 2, "license_plate": 1}, "w": 1200, "h": 1004}, {"file": "frame6.jpg", "caption": "Intersection, 2020 color camera", "drive": "20200212_2020_Feb_12_APS2MTU", "utc": 1581530322.06871, "scene": {"weather": "light_snow", "lighting": "daylight", "visibility": "moderate", "road_surface": "snow_covered", "road_type": "urban_street"}, "summary": "Snowy urban intersection on a campus-like street with pedestrians crossing and walking near the roadside, signals showing amber, and a vehicle approaching in the distance during light snowfall.", "objects": {"traffic_light": 4, "traffic_sign": 4, "car": 2, "pedestrian": 11}, "w": 1200, "h": 1004}, {"file": "frame7.jpg", "caption": "2025 rig, light traffic", "drive": "20250206_905_1550_co_collect_2-6-25_4", "utc": 1738880410.5450077, "scene": {"weather": "blowing_snow", "lighting": "daylight", "visibility": "moderate", "road_surface": "snow_covered", "road_type": "urban_street"}, "summary": "Overcast, windy winter scene at a snow-covered intersection where a maroon SUV with brake lights on stops ahead near a stop sign, with large snowbanks on the left and a parked car on the right.", "objects": {"car": 4, "license_plate": 1, "traffic_sign": 4}, "w": 1200, "h": 900}, {"file": "frame8.jpg", "caption": "Downtown street, monochrome camera", "drive": "20220105_CLM2APS", "utc": 1641406895.3862317, "scene": {"weather": "heavy_snow", "lighting": "daylight", "visibility": "poor", "road_surface": "snow_covered", "road_type": "urban_street"}, "summary": "Monochrome view from a snow-covered hood at an urban intersection in falling snow, with a pedestrian standing at the left corner, an SUV and other vehicles on the snowy street ahead, and a BAR sign on a building.", "objects": {"pedestrian": 1, "car": 4, "traffic_sign": 2}, "w": 1200, "h": 1004}], "haiku": {"n": 120982, "objects": {"car": 147595, "traffic_sign": 51297, "truck": 18665, "traffic_light": 12816, "pedestrian": 7639, "snowplow": 1271, "license_plate": 1086, "construction_object": 721, "bus": 539, "animal": 212, "motorcycle": 145, "emergency_vehicle": 80, "bicycle": 57, "face": 31}}, "sonnet": {"n": 19955, "objects": {"car": 28355, "traffic_sign": 18763, "truck": 4560, "traffic_light": 3918, "pedestrian": 2119, "license_plate": 798, "construction_object": 633, "snowplow": 334, "bus": 187, "animal": 109, "motorcycle": 67, "emergency_vehicle": 17, "bicycle": 10, "face": 9}}, "tags": {"weather": [["heavy_snow", 35248, 34.1], ["light_snow", 28557, 27.6], ["blowing_snow", 15328, 14.8], ["overcast", 11156, 10.8], ["clear", 6929, 6.7], ["fog", 6207, 6.0], ["rain", 23, 0.0]], "visibility": [["poor", 42570, 35.2], ["moderate", 39297, 32.5], ["very_poor", 33595, 27.8], ["good", 5417, 4.5]], "lighting": [["daylight", 86599, 75.6], ["night_unlit", 15156, 13.2], ["night_lit", 9626, 8.4], ["sun_glare", 1762, 1.5], ["dusk_dawn", 1378, 1.2]], "road_surface": [["snow_covered", 69621, 67.8], ["partial_snow", 27676, 27.0], ["slush", 2873, 2.8], ["wet", 2436, 2.4], ["ice", 36, 0.0], ["dry", 18, 0.0]]}, "sensors": [{"name": "Velodyne VLP-16", "bags": 102, "scans": 46059, "q": {"p10": 4.12, "p25": 5.47, "p50": 7.3, "p75": 9.56, "p90": 12.53, "mean": 7.94, "n": 46059}}, {"name": "Ouster OS1-64", "bags": 113, "scans": 36527, "q": {"p10": 3.05, "p25": 4.49, "p50": 8.33, "p75": 14.08, "p90": 20.49, "mean": 10.41, "n": 36527}}, {"name": "Velodyne VLP-32C", "bags": 49, "scans": 27657, "q": {"p10": 6.17, "p25": 8.05, "p50": 10.91, "p75": 14.65, "p90": 19.25, "mean": 11.91, "n": 27657}}, {"name": "Velodyne (single unit)", "bags": 22, "scans": 17352, "q": {"p10": 2.98, "p25": 4.2, "p50": 5.79, "p75": 8.31, "p90": 11.42, "mean": 6.75, "n": 17352}}, {"name": "RoboSense 128-channel", "bags": 43, "scans": 12763, "q": {"p10": 1.36, "p25": 2.79, "p50": 5.06, "p75": 8.37, "p90": 13.63, "mean": 6.55, "n": 12763}}, {"name": "Luminar", "bags": 6, "scans": 4099, "q": {"p10": 1.22, "p25": 1.54, "p50": 2.73, "p75": 5.23, "p90": 7.37, "mean": 3.68, "n": 4099}}, {"name": "Cepton", "bags": 6, "scans": 2678, "q": {"p10": 7.95, "p25": 12.32, "p50": 17.66, "p75": 29.12, "p90": 86.22, "mean": 28.99, "n": 2678}}, {"name": "Hesai Pandar64", "bags": 8, "scans": 1630, "q": {"p10": 3.4, "p25": 4.58, "p50": 6.07, "p75": 7.6, "p90": 9.6, "mean": 6.42, "n": 1630}}, {"name": "RoboSense M1", "bags": 2, "scans": 574, "q": {"p10": 0.66, "p25": 0.81, "p50": 1.06, "p75": 1.4, "p90": 1.99, "mean": 1.22, "n": 574}}], "pooled": {"all": {"scans": 149339, "bags": 231, "p10": 3.2, "p25": 4.97, "p50": 7.61, "p75": 11.47, "p90": 16.69}, "no_cepton": {"scans": 146661, "p10": 3.18, "p25": 4.92, "p50": 7.53, "p75": 11.26, "p90": 16.25}}, "boreas": {"scans": 75770, "seqs": 92, "all": {"p10": 0.3, "p25": 0.5, "p50": 0.99, "p75": 1.8, "p90": 2.84}, "summer": {"p10": 0.32, "p25": 0.52, "p50": 0.9, "p75": 1.49, "p90": 2.18, "scans": 15121}, "winter": {"p10": 0.29, "p25": 0.5, "p50": 1.07, "p75": 2.02, "p90": 3.25, "scans": 50539}, "storm": {"p10": 5.43, "p25": 6.32, "p50": 7.37, "p75": 8.53, "p90": 9.58, "scans": 2550}}, "cadc": {"scans": 7000, "dsor": {"p10": 2.42, "p25": 3.88, "p50": 5.38, "p75": 7.07, "p90": 9.46}}, "wadslab": {"scans": 1929, "precision": 0.826, "recall": 0.602, "r": 0.916}, "weather": [{"date": "2020-01-18", "bags": 8, "tmin": -3.3, "tmax": -3.3, "rh": 88, "p": 1001.2, "wx": ["light snow", "mist", "freezing fog"], "fsnow": 26.7}, {"date": "2020-02-12", "bags": 25, "tmin": -12.2, "tmax": -5.6, "rh": 75, "p": 1009.3, "wx": ["snow", "light snow", "heavy snow"], "fsnow": 5.4}, {"date": "2020-02-17", "bags": 18, "tmin": -1.7, "tmax": 0.0, "rh": 80, "p": 1011.4, "wx": ["light snow", "mist"], "fsnow": 4.0}, {"date": "2020-02-18", "bags": 5, "tmin": -2.2, "tmax": -1.7, "rh": 88, "p": 1010.7, "wx": ["light snow", "mist"], "fsnow": 13.6}, {"date": "2020-02-26", "bags": 5, "tmin": -8.9, "tmax": -8.9, "rh": 67, "p": 1019.5, "wx": ["light snow"], "fsnow": 3.6}, {"date": "2020-02-27", "bags": 25, "tmin": -10.6, "tmax": -8.9, "rh": 64, "p": 1014.9, "wx": ["light snow"], "fsnow": 0.6}, {"date": "2020-03-05", "bags": 15, "tmin": -0.6, "tmax": -0.6, "rh": 85, "p": 1006.4, "wx": ["freezing fog", "snow", "light snow"], "fsnow": 11.1}, {"date": "2021-01-16", "bags": 1, "tmin": -2.2, "tmax": -2.2, "rh": 78, "p": 1004.4, "wx": ["light snow", "mist"], "fsnow": 0.3}, {"date": "2021-02-04", "bags": 5, "tmin": -1.1, "tmax": -1.0, "rh": 88, "p": 992.6, "wx": ["light snow", "freezing fog", "snow"], "fsnow": 19.0}, {"date": "2021-02-06", "bags": 7, "tmin": -14.4, "tmax": -14.4, "rh": 72, "p": 1007.8, "wx": ["heavy snow"], "fsnow": 4.3}, {"date": "2021-02-28", "bags": 24, "tmin": -2.8, "tmax": -0.6, "rh": 87, "p": 1003.1, "wx": ["freezing fog", "snow", "light snow"], "fsnow": 5.3}, {"date": "2022-01-05", "bags": 38, "tmin": -10.0, "tmax": -7.8, "rh": 76, "p": 1002.4, "wx": ["light snow", "snow"], "fsnow": 2.3}, {"date": "2022-01-09", "bags": 4, "tmin": -13.9, "tmax": -13.0, "rh": 79, "p": 1019.2, "wx": ["heavy snow"], "fsnow": 0.8}, {"date": "2022-02-21", "bags": 5, "tmin": -12.8, "tmax": -12.2, "rh": 77, "p": 1023.8, "wx": ["snow", "heavy snow", "light snow"], "fsnow": 7.1}, {"date": "2022-02-22", "bags": 30, "tmin": -10.6, "tmax": -10.6, "rh": 77, "p": 1014.8, "wx": ["snow", "heavy snow", "light snow"], "fsnow": 5.3}, {"date": "2025-01-18", "bags": 11, "tmin": -13.3, "tmax": -12.8, "rh": 68, "p": 1015.1, "wx": ["light snow", "snow", "heavy snow"], "fsnow": 2.3}, {"date": "2025-01-19", "bags": 4, "tmin": -17.2, "tmax": -17.2, "rh": 64, "p": 1019.0, "wx": ["light snow", "snow"], "fsnow": 2.8}, {"date": "2025-02-06", "bags": 7, "tmin": -11.1, "tmax": -11.1, "rh": 79, "p": 1000.4, "wx": ["heavy snow"], "fsnow": 0.8}], "lidar": {"heavy": {"pct": 19.2, "returned": 195706, "removed": 37594, "drive": "20250118_905_1550_co_collect_1-18-25_5", "t": 1737240538.064}, "clear": {"pct": 1.0, "returned": 203201, "removed": 1933, "drive": "20250119_905_1550_co_collect_1-19-25", "t": 1737312424.397}}}</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const $ = s => document.querySelector(s);
+const int = v => Number(v).toLocaleString('en-US');
+const fmt = (v, d = 1) => v == null ? '–' : Number(v).toFixed(d);
+const nice = s => s.replace(/_/g, ' ');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const tip = $('#tip');
+function showTip(html, x, y) { tip.innerHTML = html; tip.hidden = false; const r = tip.getBoundingClientRect();
+  let L = x + 14, T = y + 14; if (L + r.width > innerWidth - 8) L = x - r.width - 14; if (T + r.height > innerHeight - 8) T = y - r.height - 14;
+  tip.style.left = Math.max(8, L) + 'px'; tip.style.top = Math.max(8, T) + 'px'; }
+const hideTip = () => { tip.hidden = true; };
+
+// stats
+const objTotal = Object.values(D.haiku.objects).reduce((a, b) => a + b, 0);
+const scans = D.sensors.reduce((a, s) => a + s.scans, 0);
+[['28.6 h', 'of driving'], ['144', 'drives'], ['237', 'unique bags, 28 TB'], ['4', 'winters: 2020, 21, 22, 25'], ['9', 'lidar types'],
+ [int(D.haiku.n), 'labelled camera frames'], [int(scans), 'lidar scans measured']].forEach(([b, s]) =>
+  $('#stats').insertAdjacentHTML('beforeend', `<div class="stat"><b>${b}</b><span>${s}</span></div>`));
+
+// gallery
+const BOX = [['car / truck / bus', '#46aaff'], ['traffic sign', '#ffd700'], ['traffic light', '#50e68c'], ['pedestrian (blurred)', '#ff4678'], ['snowplow / construction', '#ff8c00'], ['licence plate (blurred)', '#c8c8c8']];
+$('#boxlegend').innerHTML = 'Box colours: ' + BOX.map(([t, c]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');
+D.frames.forEach(f => {
+  const s = f.scene, chips = [s.weather, s.visibility + ' visibility', s.lighting, s.road_surface].map(c => `<span class="chip">${esc(nice(c))}</span>`).join('');
+  const date = new Date(f.utc * 1000).toISOString().slice(0, 10);
+  $('#gallery').insertAdjacentHTML('beforeend', `<figure><a href="${f.file}" target="_blank" rel="noopener"><img src="${f.file}" width="${f.w}" height="${f.h}" loading="lazy" alt="${esc(f.summary)}"></a>
+    <figcaption><strong>${esc(f.caption)}</strong><div class="chips">${chips}</div><span class="quote">“${esc(f.summary)}”</span><span class="small mono">${date}</span></figcaption></figure>`);
+});
+
+// tag bars
+const TITLES = {weather: 'Weather', visibility: 'Visibility', lighting: 'Lighting', road_surface: 'Road surface'};
+const bars = (rows, unit) => rows.map(([k, n, p]) => `<div class="bar" data-tip="${esc(nice(k))}: ${int(n)} frames (${fmt(p)} %)"><span class="k">${esc(nice(k))}</span><span class="t"><i style="width:${Math.max(p, .4)}%"></i></span><span class="v">${unit(p, n)}</span></div>`).join('');
+Object.entries(D.tags).forEach(([k, rows]) => {
+  const mx = Math.max(...rows.map(r => r[2]));
+  $('#tagcols').insertAdjacentHTML('beforeend', `<div style="display:grid;gap:10px;min-width:0"><h3>${TITLES[k]}</h3><div class="bars">${bars(rows.map(r => [r[0], r[1], r[2]]), p => fmt(p, 0) + '%')}</div></div>`);
+});
+const w = Object.fromEntries(D.tags.weather.map(r => [r[0], r[2]])), v = Object.fromEntries(D.tags.visibility.map(r => [r[0], r[2]]));
+$('#tagnote').textContent = `Across ${int(D.haiku.n)} frames, ${fmt(w.heavy_snow + w.light_snow + w.blowing_snow, 0)} % show falling or blowing snow, and ${fmt(v.poor + v.very_poor, 0)} % have poor or very poor visibility. Shares exclude frames the model marked unknown.`;
+const objs = Object.entries(D.haiku.objects).filter(([k]) => k !== 'face').sort((a, b) => b[1] - a[1]).slice(0, 10);
+const omax = objs[0][1];
+$('#objbars').innerHTML = objs.map(([k, n]) => `<div class="bar" data-tip="${esc(nice(k))}: ${int(n)} boxes"><span class="k">${esc(nice(k))}</span><span class="t"><i style="width:${100 * n / omax}%"></i></span><span class="v">${n >= 1000 ? fmt(n / 1000, 1) + 'k' : n}</span></div>`).join('');
+$('#objnote').textContent = `${int(objTotal)} boxes from the first labelling pass, ten most common classes. The scale is relative to cars.`;
+document.querySelectorAll('[data-tip]').forEach(el => { el.addEventListener('mousemove', e => showTip(el.dataset.tip, e.clientX, e.clientY)); el.addEventListener('mouseleave', hideTip); });
+
+// lidar BEV
+[['heavy', 'Heavy snow'], ['clear', 'Clear air']].forEach(([k, t]) => {
+  const L = D.lidar[k], date = new Date(L.t * 1000).toISOString().slice(0, 10);
+  $('#bev').insertAdjacentHTML('beforeend', `<figure><div><img src="lidar_${k}.png" width="900" height="900" alt="${t}: bird's-eye view of one lidar scan, ${fmt(L.pct)} % of returns removed as snow">
+    <span class="tag" style="color:${k === 'heavy' ? 'var(--accent)' : 'var(--ink)'}">${fmt(L.pct)} %<small>${t}</small></span></div>
+    <figcaption class="small mono">${int(L.removed)} of ${int(L.returned)} returns removed · 128-channel RoboSense · ${date}</figcaption></figure>`);
+});
+
+// range chart (shared)
+function rangeChart(el, rows, xmax, ticks) {
+  const W = 900, rowH = 34, top = 28, left = 190, right = 40, H = top + rows.length * rowH + 8;
+  const x = v => left + (W - left - right) * Math.min(v, xmax) / xmax;
+  const ink2 = css('--ink-2'), rule = css('--rule'), bar = css('--bar'), bar2 = css('--bar-2'), acc = css('--accent'), surf = css('--surface');
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  ticks.forEach(t => { s += `<line x1="${x(t)}" x2="${x(t)}" y1="${top - 6}" y2="${H - 4}" stroke="${rule}" stroke-width="1"/><text class="tick" x="${x(t)}" y="${top - 12}" text-anchor="middle">${t}${t === ticks[ticks.length - 1] ? ' %' : ''}</text>`; });
+  rows.forEach((r, i) => {
+    const y = top + i * rowH + rowH / 2, q = r.q, c = r.hot ? acc : bar;
+    s += `<g class="row" data-i="${i}"><rect x="0" y="${y - rowH / 2}" width="${W}" height="${rowH}" fill="transparent"/>`;
+    s += `<text x="${left - 12}" y="${y + 4}" text-anchor="end" style="fill:${r.dim ? css('--ink-3') : ink2}">${esc(r.name)}</text>`;
+    s += `<line x1="${x(q.p10)}" x2="${x(q.p90)}" y1="${y}" y2="${y}" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="${r.dim ? .45 : 1}"/>`;
+    s += `<rect x="${x(q.p25)}" y="${y - 7}" width="${Math.max(2, x(q.p75) - x(q.p25))}" height="14" rx="3" fill="${r.hot ? acc : bar2}" opacity="${r.dim ? .45 : .9}"/>`;
+    s += `<circle cx="${x(q.p50)}" cy="${y}" r="5.5" fill="${c}" stroke="${surf}" stroke-width="2"/>`;
+    s += `<text class="tick" x="${x(q.p50)}" y="${y - 11}" text-anchor="middle">${fmt(q.p50)}</text>`;
+    if (q.p90 > xmax) s += `<text class="tick" x="${W - right + 6}" y="${y + 4}">${fmt(q.p90, 0)}→</text>`;
+    s += `</g>`;
+  });
+  el.innerHTML = s + '</svg>';
+  el.querySelectorAll('.row').forEach(g => { const r = rows[+g.dataset.i];
+    g.addEventListener('mousemove', e => showTip(r.tip, e.clientX, e.clientY)); g.addEventListener('mouseleave', hideTip); });
+}
+rangeChart($('#sensorchart'), D.sensors.map(s => ({name: s.name, q: s.q, dim: s.name === 'Cepton',
+  tip: `<b>${esc(s.name)}</b><br>${int(s.scans)} scans · ${s.bags} bags<br>median ${fmt(s.q.p50)} % · middle half ${fmt(s.q.p25)}–${fmt(s.q.p75)} %${s.name === 'Cepton' ? '<br>Its point pattern trips the filter in any weather; not comparable.' : ''}`})), 30, [0, 5, 10, 15, 20, 25, 30]);
+const P = D.pooled.all, B = D.boreas, C = D.cadc;
+rangeChart($('#cmpchart'), [
+  {name: 'WADS, all lidars', q: P, hot: true, tip: `<b>WADS</b><br>${int(P.scans)} scans from ${P.bags} bags · median ${fmt(P.p50)} %`},
+  {name: 'Boreas, 2021 snowstorm', q: B.storm, tip: `<b>Boreas storm</b><br>${int(B.storm.scans)} scans · median ${fmt(B.storm.p50)} %`},
+  {name: 'CADC (Waterloo)', q: C.dsor, tip: `<b>CADC</b><br>${int(C.scans)} scans · median ${fmt(C.dsor.p50)} %`},
+  {name: 'Boreas, winter runs', q: B.winter, tip: `<b>Boreas winter</b><br>${int(B.winter.scans)} scans · median ${fmt(B.winter.p50)} %`},
+  {name: 'Boreas, summer runs', q: B.summer, tip: `<b>Boreas summer</b><br>${int(B.summer.scans)} scans · median ${fmt(B.summer.p50)} %: the clear-air floor`},
+], 20, [0, 5, 10, 15, 20]);
+const WL = D.wadslab;
+[[fmt(P.p50) + ' %', 'median snow share in a WADS scan, against ' + fmt(B.all.p50) + ' % across all Boreas runs', true],
+ [fmt(B.storm.p50) + ' %', 'median in Boreas\'s single snowstorm: a typical WADS scan is that snowy'],
+ [fmt(WL.precision * 100, 0) + ' %', `of points DSOR flags are snow in hand-labelled WADS scans (precision; it finds ${fmt(WL.recall * 100, 0)} % of them)`],
+ ['r = ' + fmt(WL.r, 2), `correlation between DSOR snow share and the hand-labelled share over ${int(WL.scans)} scans`]]
+ .forEach(([b, s, hot]) => $('#tiles').insertAdjacentHTML('beforeend', `<div class="tile${hot ? ' hot' : ''}"><b>${b}</b><span>${s}</span></div>`));
+
+// weather table
+const fmax = Math.max(...D.weather.map(r => r.fsnow || 0));
+$('#wx').innerHTML = `<thead><tr><th>Local date</th><th class="n">Bags</th><th class="n">Temp °C</th><th class="n">RH %</th><th class="n">Pressure hPa</th><th>Reported weather</th><th class="n">Forecast snow, day</th></tr></thead><tbody>` +
+  D.weather.map(r => `<tr><td class="mono">${r.date}</td><td class="n">${r.bags}</td><td class="n">${r.tmin === r.tmax ? fmt(r.tmin) : fmt(r.tmin) + ' to ' + fmt(r.tmax)}</td><td class="n">${r.rh}</td><td class="n">${fmt(r.p)}</td><td>${esc(r.wx.join(', ') || '–')}</td>
+  <td class="n"><span class="snow"><i style="width:${Math.round(60 * (r.fsnow || 0) / fmax)}px"></i>${fmt(r.fsnow)} cm</span></td></tr>`).join('') + '</tbody>';
+</script>
+
+</body></html>

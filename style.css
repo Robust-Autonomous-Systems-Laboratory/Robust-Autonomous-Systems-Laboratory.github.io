@@ -63,6 +63,15 @@ section.band { background: var(--paper-2); }
 .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .card { border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: var(--radius); padding: 22px; background: var(--paper); }
 .card p { color: var(--muted); margin: 0; }
+/* Cards that open an area page: the whole card is the click target */
+.card.linked { position: relative; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.card-link { color: inherit; text-decoration: none; }
+.card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
+.card-link::before { content: "\2192"; float: right; margin-left: 8px; color: var(--link); transition: transform .2s; }
+.card.linked:hover, .card.linked:focus-within { border-color: var(--gold); box-shadow: 0 6px 20px rgba(0,0,0,.08); transform: translateY(-2px); }
+.card.linked:hover .card-link::before { transform: translateX(3px); }
+.card-link:focus-visible { outline: none; }
+.card.linked:has(.card-link:focus-visible) { outline: 3px solid var(--gold); outline-offset: 2px; }
 
 /* Data & software */
 .links { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px 32px; }
