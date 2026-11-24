@@ -129,3 +129,12 @@ section.band { background: var(--paper-2); }
 .project figcaption { color: var(--muted); font-size: .85rem; margin-top: 8px; }
 .project p { color: var(--muted); }
 .project .who { color: var(--text); font-size: .9rem; font-weight: 600; margin: -4px 0 0; }
+
+/* Project pages (wads/, turbulence/): the same hero band, sections and footer, with a link home */
+.hero.page { padding: 22px 0 52px; }
+.crumb { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 40px; color: #cfd0d4; font-weight: 600; font-size: .92rem; text-decoration: none; }
+.crumb img { width: 24px; height: 30px; flex: none; }
+.crumb:hover, .crumb:focus-visible { color: var(--gold); }
+.hero.page h1 { color: #f4f3ee; max-width: 16em; }
+.hero.page .lede { max-width: 46em; margin: 0; }
+main .eyebrow { color: var(--link); }

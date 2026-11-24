@@ -6,65 +6,47 @@
 <title>Imaging Through Turbulence</title>
 <meta name="description" content="A horizontal-path imaging simulator that models turbulence and anisoplanatism, from the Robust Autonomous Systems Laboratory at Michigan Tech.">
 <link rel="icon" href="../assets/RASL/flame-avatar-square.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/RASL/flame-avatar-square.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../style.css">
 <style>
-/* Dark-first "optics bench" look: deep navy, a cool cyan accent, serif headings, mono for numbers. */
-:root {
-  color-scheme: dark;
-  --bg: #0a111d; --surface: #101a2b; --surface-2: #15223a;
-  --ink: #e7edf6; --ink-2: #aab6c8; --ink-3: #7f8ca2;
-  --rule: #22314b; --accent: #5ad1e6; --accent-ink: #7fdcec; --bar: #3fb6cf; --fit: #e7edf6;
-  --f-display: "Source Serif 4", Georgia, serif;
-  --f-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+/* Optics pages: the home page's layout and stylesheet, in a different key.
+   Same hero band, sections, cards and footer; navy instead of black, a cyan accent instead of gold
+   (gold survives as the brand mark on the hero rule), serif headings, mono for numbers. */
+body.optics {
+  --paper: #f7f9fb; --paper-2: #ecf1f6; --text: #111a27; --muted: #4b586b; --ink-3: #66748b; --line: #d5deea;
+  --link: #0a6c82; --accent: #1c8aa3; --accent-ink: #086b80; --cyan: #5ad1e6; --night: #0a1220;
+  --bar: var(--accent); --fit: var(--text); --rule: var(--line); --ink-2: var(--muted);
+  --f-display: "Source Serif 4", Georgia, serif; --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
 }
-@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
-  color-scheme: light;
-  --bg: #f4f7fb; --surface: #ffffff; --surface-2: #eaf0f7;
-  --ink: #0d1726; --ink-2: #44526a; --ink-3: #66748b;
-  --rule: #d5deea; --accent: #0b7d95; --accent-ink: #086b80; --bar: #1c8aa3; --fit: #0d1726; } }
-:root[data-theme="light"] {
-  color-scheme: light;
-  --bg: #f4f7fb; --surface: #ffffff; --surface-2: #eaf0f7;
-  --ink: #0d1726; --ink-2: #44526a; --ink-3: #66748b;
-  --rule: #d5deea; --accent: #0b7d95; --accent-ink: #086b80; --bar: #1c8aa3; --fit: #0d1726; }
-
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.65 var(--f-body); -webkit-font-smoothing: antialiased; }
-img, video { max-width: 100%; display: block; }
-a { color: var(--accent-ink); text-underline-offset: 2px; }
-h1, h2, h3 { font-family: var(--f-display); font-weight: 600; line-height: 1.12; margin: 0; text-wrap: balance; }
-h1 { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: -.015em; }
-h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
-h3 { font-size: 1.1rem; }
-p { margin: 0; max-width: 68ch; }
-.wrap { max-width: 1080px; margin: 0 auto; padding: 36px 16px 64px; display: grid; gap: 64px; }
-@media (min-width: 720px) { .wrap { padding: 44px 28px 72px; } }
-section { display: grid; gap: 18px; }
-.eyebrow, .home { font: 500 12px/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
-.home { text-decoration: none; justify-self: start; }
-.home:hover, .home:focus-visible { color: var(--accent-ink); }
-.muted { color: var(--ink-2); }
+@media (prefers-color-scheme: dark) {
+  body.optics { --paper: #0b111b; --paper-2: #101926; --text: #e7edf6; --muted: #aab6c8; --ink-3: #7f8ca2; --line: #22314b;
+    --link: #7fdcec; --accent: #3fb6cf; --accent-ink: #7fdcec; }
+}
+.optics h1, .optics h2, .optics h3 { font-family: var(--f-display); font-weight: 600; letter-spacing: -.005em; text-wrap: balance; }
+.optics h2, .optics h3 { margin: 0; }
+.optics .hero { background: var(--night); border-bottom: 4px solid; border-image: linear-gradient(90deg, var(--gold) 0 128px, var(--cyan) 128px) 1; }
+.optics .hero .eyebrow { color: var(--cyan); }
+.optics main .eyebrow { color: var(--link); font: 500 12px/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; margin: 0; }
+.optics .card { border-top-color: var(--accent); padding: 20px; min-width: 0; overflow: hidden; }
+.optics .crumb:hover, .optics .crumb:focus-visible { color: var(--cyan); }
+.stack { display: grid; gap: 18px; }
+.stack p { margin: 0; max-width: 68ch; }
+.muted { color: var(--muted); }
 .small { font-size: 14px; color: var(--ink-3); }
 .mono { font-family: var(--f-mono); }
 sup.cite, .cite { font: 500 .78em var(--f-mono); }
 sup.cite a { text-decoration: none; }
 
-/* Hero */
-header { display: grid; gap: 18px; padding-bottom: 36px; border-bottom: 1px solid var(--rule); position: relative; }
-header::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 96px; height: 2px; background: var(--accent); }
-.lede { font-size: 1.2rem; color: var(--ink-2); max-width: 60ch; }
-
 /* Prose + side table */
 .two { display: grid; gap: 28px; align-items: start; }
 @media (min-width: 900px) { .two { grid-template-columns: 1.5fr 1fr; } }
 .prose { display: grid; gap: 14px; }
-.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; min-width: 0; overflow: hidden; }
 table { border-collapse: collapse; width: 100%; font-size: 15px; }
 caption { text-align: left; font-size: 13.5px; color: var(--ink-3); padding-bottom: 10px; caption-side: top; }
-th, td { padding: 8px 6px; border-bottom: 1px solid var(--rule); text-align: left; }
+th, td { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: left; }
 th { font: 500 12.5px/1.3 var(--f-mono); letter-spacing: .02em; color: var(--ink-3); }
 .tablewrap { overflow-x: auto; }
 .tablewrap table { min-width: 460px; }
@@ -72,47 +54,49 @@ td.n, th.n { text-align: right; font-family: var(--f-mono); font-size: 13.5px; f
 tr:last-child td { border-bottom: 0; }
 
 /* Frames */
-.frames { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.frames { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (min-width: 860px) { .frames { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .frames figure { margin: 0; display: grid; gap: 8px; align-content: start; }
-.frames img, .frames video { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 8px; background: #000; }
-.frames figcaption { font-size: 14px; color: var(--ink-2); line-height: 1.4; }
-.frames figcaption b { display: block; color: var(--ink); font-family: var(--f-display); font-size: 1.02rem; font-weight: 600; }
+.frames img, .frames video { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); background: #000; }
+.frames figcaption { font-size: 14px; color: var(--muted); line-height: 1.4; }
+.frames figcaption b { display: block; color: var(--text); font-family: var(--f-display); font-size: 1.05rem; font-weight: 600; }
 .frames .param { font: 400 12.5px/1.4 var(--f-mono); color: var(--ink-3); }
 
 /* Chart */
-.key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--ink-2); }
+.key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--muted); }
 .key i { display: inline-block; vertical-align: -1px; margin-right: 7px; }
 .key .sw-bar { width: 11px; height: 11px; border-radius: 2px; background: var(--bar); }
 .key .sw-line { width: 18px; height: 2px; vertical-align: 3px; background: var(--fit); }
 .key .sw-mean { width: 2px; height: 14px; vertical-align: -2px; background: repeating-linear-gradient(to bottom, var(--accent-ink) 0 4px, transparent 4px 7px); }
 .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
-.chart text { font-family: var(--f-body); fill: var(--ink-2); font-size: 13px; }
+.chart text { font-family: Inter, sans-serif; fill: var(--muted); font-size: 13px; }
 .chart .tick { font-family: var(--f-mono); fill: var(--ink-3); font-size: 11.5px; }
-.chart .plabel { fill: var(--ink); font-family: var(--f-display); font-size: 15px; font-weight: 600; }
-.chart rect.bin { fill: var(--bar); }
-.chart rect.bin.hot { fill: var(--accent-ink); }
-#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 13px; line-height: 1.45; padding: 7px 10px; border-radius: 6px; max-width: 260px; }
+.chart .plabel { fill: var(--text); font-family: var(--f-display); font-size: 15px; font-weight: 600; }
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--text); color: var(--paper); font-size: 13px; line-height: 1.45; padding: 7px 10px; border-radius: 6px; max-width: 260px; }
 
 /* References */
-ol.refs { margin: 0; padding-left: 1.6em; display: grid; gap: 10px; font-size: 15px; color: var(--ink-2); max-width: 80ch; }
+ol.refs { margin: 0; padding-left: 1.6em; display: grid; gap: 10px; font-size: 15px; color: var(--muted); max-width: 80ch; }
 ol.refs li::marker { font-family: var(--f-mono); color: var(--ink-3); }
-ol.refs em { color: var(--ink); font-style: normal; }
-footer { border-top: 1px solid var(--rule); padding-top: 20px; display: grid; gap: 8px; }
+ol.refs em { color: var(--text); font-style: normal; }
+section.band.notes { padding-top: 28px; padding-bottom: 28px; }
+.notes p { max-width: 80ch; margin: 0 0 .5em; }
+.notes .eyebrow { margin-bottom: 10px; }
 </style>
 </head>
-<body>
-<div class="wrap">
-
-  <header>
-    <a class="home" href="../">← Robust Autonomous Systems Lab</a>
-    <div class="eyebrow">Atmospheric optics</div>
+<body class="optics">
+<header class="hero page">
+  <div class="wrap">
+    <a class="crumb" href="../"><img src="../assets/RASL/logo-gold-outline.svg" alt="" width="24" height="30">Robust Autonomous Systems Lab</a>
+    <p class="eyebrow">Atmospheric optics</p>
     <h1>Imaging through turbulence</h1>
     <p class="lede">When a camera looks across a kilometer of air near the ground, turbulence blurs and warps the scene differently from one point to the next. We build physics-based simulators of that process, and methods to recover the scene from it.</p>
-  </header>
+  </div>
+</header>
 
-  <section>
-    <div class="eyebrow">Simulation</div>
+<main>
+
+  <section class="wrap stack">
+    <p class="eyebrow">Simulation</p>
     <h2>A horizontal-path imaging simulator</h2>
     <div class="two">
       <div class="prose">
@@ -134,35 +118,37 @@ footer { border-top: 1px solid var(--rule); padding-top: 20px; display: grid; ga
     </div>
   </section>
 
-  <section>
-    <div class="eyebrow">Simulated frames</div>
-    <h2>One scene, three turbulence strengths</h2>
-    <p class="muted">Each clip plays 100 frames, every one through an independent realization of the turbulence, at 15 frames per second. Settings: 12.5 cm aperture, 0.7 µm wavelength, 1 km range, a scene 1 m across, a 200 × 200 detector, and five phase screens.</p>
-    <div class="frames">
-      <figure>
-        <picture>
-          <source type="image/webp" srcset="boats.webp">
-          <img src="boats.jpg" width="400" height="400" alt="Black-and-white photograph of fishing boats beached at low tide, with a lighthouse behind them">
-        </picture>
-        <figcaption><b>Original scene</b>“Boat” test image (<a href="#credits">credit</a>)</figcaption>
-      </figure>
-      <figure>
-        <video data-src="low.mp4" poster="low.jpg" autoplay loop muted playsinline width="400" height="400" aria-label="The boat scene through low turbulence: slightly blurred, with gentle shimmer"></video>
-        <figcaption><b>Low</b><span class="param">C<sub>n</sub><sup>2</sup> = 1.0 × 10<sup>−14</sup> · r<sub>0</sub> = 3.0 cm</span></figcaption>
-      </figure>
-      <figure>
-        <video data-src="moderate.mp4" poster="moderate.jpg" autoplay loop muted playsinline width="400" height="400" aria-label="The boat scene through moderate turbulence: more blur, and different parts of the scene wobble independently"></video>
-        <figcaption><b>Moderate</b><span class="param">C<sub>n</sub><sup>2</sup> = 1.75 × 10<sup>−14</sup> · r<sub>0</sub> = 2.2 cm</span></figcaption>
-      </figure>
-      <figure>
-        <video data-src="severe.mp4" poster="severe.jpg" autoplay loop muted playsinline width="400" height="400" aria-label="The boat scene through severe turbulence: heavily blurred, with strong warping that varies across the frame"></video>
-        <figcaption><b>Severe</b><span class="param">C<sub>n</sub><sup>2</sup> = 2.5 × 10<sup>−14</sup> · r<sub>0</sub> = 1.7 cm</span></figcaption>
-      </figure>
+  <section class="band">
+    <div class="wrap stack">
+      <p class="eyebrow">Simulated frames</p>
+      <h2>One scene, three turbulence strengths</h2>
+      <p class="muted">Each clip plays 100 frames, every one through an independent realization of the turbulence, at 15 frames per second. Settings: 12.5 cm aperture, 0.7 µm wavelength, 1 km range, a scene 1 m across, a 200 × 200 detector, and five phase screens.</p>
+      <div class="frames">
+        <figure>
+          <picture>
+            <source type="image/webp" srcset="boats.webp">
+            <img src="boats.jpg" width="400" height="400" alt="Black-and-white photograph of fishing boats beached at low tide, with a lighthouse behind them">
+          </picture>
+          <figcaption><b>Original scene</b>“Boat” test image (<a href="#credits">credit</a>)</figcaption>
+        </figure>
+        <figure>
+          <video data-src="low.mp4" poster="low.jpg" autoplay loop muted playsinline width="400" height="400" aria-label="The boat scene through low turbulence: slightly blurred, with gentle shimmer"></video>
+          <figcaption><b>Low</b><span class="param">C<sub>n</sub><sup>2</sup> = 1.0 × 10<sup>−14</sup> · r<sub>0</sub> = 3.0 cm</span></figcaption>
+        </figure>
+        <figure>
+          <video data-src="moderate.mp4" poster="moderate.jpg" autoplay loop muted playsinline width="400" height="400" aria-label="The boat scene through moderate turbulence: more blur, and different parts of the scene wobble independently"></video>
+          <figcaption><b>Moderate</b><span class="param">C<sub>n</sub><sup>2</sup> = 1.75 × 10<sup>−14</sup> · r<sub>0</sub> = 2.2 cm</span></figcaption>
+        </figure>
+        <figure>
+          <video data-src="severe.mp4" poster="severe.jpg" autoplay loop muted playsinline width="400" height="400" aria-label="The boat scene through severe turbulence: heavily blurred, with strong warping that varies across the frame"></video>
+          <figcaption><b>Severe</b><span class="param">C<sub>n</sub><sup>2</sup> = 2.5 × 10<sup>−14</sup> · r<sub>0</sub> = 1.7 cm</span></figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
-  <section>
-    <div class="eyebrow">Error statistics</div>
+  <section class="wrap stack">
+    <p class="eyebrow">Error statistics</p>
     <h2>How far each frame strays from a perfect image</h2>
     <p class="muted">For every simulated frame we compute the mean squared error (MSE) per pixel against a diffraction-limited image of the same scene: the image the camera would form with no turbulence at all. Each frame is first centered on that reference, using the sub-pixel shift that maximizes their cross-correlation, so the MSE measures blur and local warping rather than whole-image wander. Intensities are on the 0–255 scale of the original scene, and a 16-pixel border is excluded. In the original study<sup class="cite"><a href="#ref1">[1]</a></sup>, 1000 frames per condition showed that per-frame MSE follows a log-normal distribution whose mean grows roughly linearly with turbulence strength.</p>
     <p class="muted"><strong>Preliminary.</strong> The histograms below use 100 frames per condition from the GPU port, which we are still validating against the original MATLAB simulator. <span id="msenote"></span></p>
@@ -174,13 +160,15 @@ footer { border-top: 1px solid var(--rule); padding-top: 20px; display: grid; ga
     </div>
   </section>
 
-  <section>
-    <div class="eyebrow">Coming next</div>
-    <p class="muted">We will add scene recovery from these image sequences, building on our work in multiframe blind deconvolution under anisoplanatic conditions<sup class="cite"><a href="#ref4">[4]</a></sup>, and light-field imaging through turbulence.</p>
+  <section class="band">
+    <div class="wrap stack">
+      <p class="eyebrow">Coming next</p>
+      <p class="muted">We will add scene recovery from these image sequences, building on our work in multiframe blind deconvolution under anisoplanatic conditions<sup class="cite"><a href="#ref4">[4]</a></sup>, and light-field imaging through turbulence.</p>
+    </div>
   </section>
 
-  <section id="refs">
-    <div class="eyebrow">References</div>
+  <section id="refs" class="wrap stack">
+    <p class="eyebrow">References</p>
     <ol class="refs">
       <li id="ref1">J. P. Bos and M. C. Roggemann, “Technique for simulating anisoplanatic image formation over long horizontal paths,” <em>Optical Engineering</em> 51(10), 101704 (2012). <a href="https://doi.org/10.1117/1.OE.51.10.101704">doi:10.1117/1.OE.51.10.101704</a></li>
       <li id="ref2">J. P. Bos and M. C. Roggemann, “Simulation of extended scenes imaged through turbulence over horizontal paths,” <em>Proc. SPIE</em> 8161, Atmospheric Optics IV: Turbulence and Propagation, 816106 (2011). <a href="https://doi.org/10.1117/12.893869">doi:10.1117/12.893869</a></li>
@@ -189,13 +177,19 @@ footer { border-top: 1px solid var(--rule); padding-top: 20px; display: grid; ga
     </ol>
   </section>
 
-  <footer id="credits">
-    <div class="eyebrow">Credits</div>
-    <p class="small">Scene: “Boat” (boat.512), <a href="https://sipi.usc.edu/database/">USC-SIPI Image Database</a>, Signal and Image Processing Institute, University of Southern California. USC-SIPI lists the original source and copyright status of this image as unknown; it is used here as a standard research test image.</p>
-    <p class="small">Simulated frames and statistics: the lab's Python/GPU port of the MATLAB horizontal-path simulator described in <a href="#ref1">[1]</a>.</p>
-    <p class="small"><a href="../">Robust Autonomous Systems Laboratory</a>, Michigan Technological University.</p>
-  </footer>
-</div>
+  <section id="credits" class="band notes">
+    <div class="wrap">
+      <p class="eyebrow">Credits</p>
+      <p class="small">Scene: “Boat” (boat.512), <a href="https://sipi.usc.edu/database/">USC-SIPI Image Database</a>, Signal and Image Processing Institute, University of Southern California. USC-SIPI lists the original source and copyright status of this image as unknown; it is used here as a standard research test image.</p>
+      <p class="small">Simulated frames and statistics: the lab's Python/GPU port of the MATLAB horizontal-path simulator described in <a href="#ref1">[1]</a>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <img class="logo" src="../assets/RASL/flame-avatar-square-transparent.svg" alt="RASL logo" width="72" height="72" loading="lazy">
+  <p><a href="../">Robust Autonomous Systems Laboratory</a> · Michigan Tech · <a href="https://github.com/jpbos/WavePy">WavePy</a></p>
+</footer>
 <div id="tip" hidden></div>
 
 <script type="application/json" id="mse">{"roll":[-1,0],"border":16,"registered":true,"conditions":[{"name":"low","cn2":1e-14,"r0_cm_plane":3.02,"n":100,"mean":162.47,"sd":25.51,"median":158.01,"min":117.02,"max":259.47,"ln_mu":5.0789,"ln_sigma":0.1511,"shift_rms_px":0.48,"counts":[0,0,4,14,11,21,13,15,9,6,1,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"name":"moderate","cn2":1.75e-14,"r0_cm_plane":2.16,"n":100,"mean":240.68,"sd":27.8,"median":237.16,"min":187.08,"max":331.29,"ln_mu":5.4771,"ln_sigma":0.113,"shift_rms_px":0.62,"counts":[0,0,0,0,0,0,0,0,1,3,9,13,16,14,12,12,8,6,1,2,2,0,1,0,0,0,0,0,0,0]},{"name":"severe","cn2":2.5e-14,"r0_cm_plane":1.74,"n":100,"mean":303.91,"sd":29.14,"median":303.3,"min":245.17,"max":387.0,"ln_mu":5.7123,"ln_sigma":0.0943,"shift_rms_px":0.72,"counts":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,10,10,17,11,17,8,7,7,3,2,1,2,0,0]}],"edges":[95.42,105.86,116.3,126.74,137.18,147.62,158.06,168.5,178.94,189.38,199.81,210.25,220.69,231.13,241.57,252.01,262.45,272.89,283.33,293.77,304.21,314.65,325.09,335.52,345.96,356.4,366.84,377.28,387.72,398.16,408.6]}</script>
