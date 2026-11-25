@@ -109,9 +109,6 @@ math { font-size: 1.15em; }
 .readout div { display: grid; gap: 2px; }
 .readout b { font: 700 24px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
 .readout span { font-size: 13.5px; color: var(--muted); }
-.badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); justify-self: start; }
-.badge i { width: 10px; height: 10px; border-radius: 50%; background: var(--ink-3); }
-.badge.yes i { background: var(--gold); box-shadow: 0 0 0 2px rgba(255, 205, 0, .25); }
 #epl svg { display: block; width: 100%; height: auto; overflow: visible; }
 #epl text { font-family: Inter, sans-serif; font-size: 12.5px; fill: var(--muted); }
 #epl .tick { font-family: var(--f-mono); font-size: 11.5px; fill: var(--ink-3); }
@@ -145,7 +142,7 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
     <a class="crumb" href="../"><img src="../assets/RASL/logo-gold-outline.svg" alt="" width="24" height="30">Robust Autonomous Systems Lab</a>
     <div class="hero-top"><p class="eyebrow">Off-road mobility &amp; planning</p><span class="draft">Draft</span></div>
     <h1>Driving on <span style="color:var(--gold)">point clouds</span> in rough terrain</h1>
-    <p class="lede">MUONS, Michigan Tech's Off-road Navigation Stack, plans paths for ground robots directly on lidar point clouds, with no costmap in between. We tested it in 30,000 simulated traversals and in the field. We also derived a model that predicts how far a sample-based planner's path will stray from the straight line, and how to tune it.</p>
+    <p class="lede">MUONS, Michigan Tech's Off-road Navigation Stack, plans paths for ground robots directly on lidar point clouds, with no costmap in between. We tested it in 30,000 simulated traversals and in the field. We also derived a model of how far a sample-based planner's path strays from the shortest one, and used it to make planners converge faster.</p>
     <p class="authors"><span>Casey D. Majhor</span> · <span>Chaz Cornwall</span> · <span>Logan Schexnaydre</span> · <span>Ian Mattson</span> · <span>Jeremy P. Bos</span></p>
     <p class="affil">Department of Electrical and Computer Engineering, Michigan Technological University</p>
     <ul class="btns">
@@ -153,7 +150,8 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
       <li><a href="https://doi.org/10.1109/LRA.2026.3685923">Paper <small>IEEE RA-L</small></a></li>
       <li><a href="#videos">Videos</a></li>
       <li><a href="#cite">BibTeX</a></li>
-      <li><span aria-disabled="true" title="Code release in preparation">Code <small>coming soon</small></span></li>
+      <li><a href="https://github.com/chazcornwall/can_we_get_there_faster">Code <small>RA-L experiments</small></a></li>
+      <li><span aria-disabled="true" title="Code release in preparation">MUONS code <small>coming soon</small></span></li>
     </ul>
   </div>
 </header>
@@ -268,7 +266,7 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
     <div class="head">
       <p class="eyebrow">Theory · IEEE RA-L</p>
       <h2>How far from the shortest path?</h2>
-      <p class="muted">A sample-based planner trades feasibility (finding any path) against optimality (finding a short one). We model that trade-off directly. At each of <i>n</i> steps the planner picks the best of <i>m</i> random choices. With probability set by its goal bias <i>c</i>, the step adds nothing, and otherwise it adds some excess length, at most <i>b</i>. Summing the steps gives a closed form for the distribution of excess path length (EPL) in terms of the planner's own parameters.</p>
+      <p class="muted">A sample-based planner has to balance how long it samples against how short its path is. We model the result directly as excess path length (EPL), the length beyond the shortest possible path, the same measure used in the field study above. At each of <i>n</i> samples the planner keeps the best of <i>m</i> nearest-neighbor choices. With probability <i>c</i>, its bias rate, a choice adds nothing; otherwise it adds some excess, at most <i>b</i>. When obstacles are sparse, summing over the samples gives a closed form for the distribution of EPL in terms of the planner's own parameters.</p>
     </div>
     <div class="eq" aria-label="f sub V of v equals one minus p to the n times delta of v, plus the sum from k equals 1 to n of the binomial probability B of k given n and p times the gamma density of v with shape k and rate lambda, where p equals one minus c to the m and lambda equals m over b.">
       <math display="block"><mrow>
@@ -284,15 +282,16 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
     </div>
     <div class="grid2">
       <div class="prose">
-        <p class="muted">A perfect step only passes earlier errors along, while an imperfect one adds to them. That is why the result is a binomial blend of gamma distributions. It collapses to a spike at zero as goal bias rises (<i>c</i>&nbsp;→&nbsp;1), as choices per step grow (<i>m</i>&nbsp;→&nbsp;∞), or as obstacles vanish (<i>b</i>&nbsp;→&nbsp;0). With no goal bias, as in PRM, it becomes a pure gamma distribution, and for long paths it tends to a normal one.</p>
-        <p class="muted"><strong>Theorem&nbsp;1</strong> gives a one-line tuning rule. If the odds that a step adds nothing, (1&nbsp;−&nbsp;p)/p, are at least (n&nbsp;−&nbsp;1)/2, then the most likely excess path length is zero.</p>
-        <p class="muted">The model fits RRT* and PRM in open 2D tests and an RRT-based planner on the simulated Husky across 15 terrains. Between the best and worst Husky parameter sets (Bi-RRT expansion radius 1.84&nbsp;m against 0.24&nbsp;m, PS3 and PS18 above), only <i>n</i> had to change. That links the theory to the knob that mattered most in the field study.</p>
+        <p class="muted">A perfect step only passes earlier error along, while an imperfect one adds to it. That is why the result is a binomial blend of gamma distributions. For practical use, the paper approximates it with a single gamma distribution whose shape is an <strong>effective number of samples</strong>, n′&nbsp;=&nbsp;np/(2&nbsp;−&nbsp;p). Any bias (c&nbsp;&gt;&nbsp;0) makes n′ smaller than n, so a biased planner behaves as if it had taken fewer samples.</p>
+        <p class="muted">That observation becomes an algorithm. Planners such as RRT* shrink their nearest-neighbor radius as samples pile up. Computing the radius from n′ instead of n keeps it larger, so the planner takes longer steps in promising directions. In OMPL tests of RRT*, Informed RRT*, BIT* and EIT* in 8-D, the correction shortened the median path by about 10% (20–40&nbsp;m) with success rates close to the originals. On a simulated 7-DOF Panda arm, EIT* with the correction performed best. In easy 2-D problems the gain is smaller (up to 2&nbsp;m) and success can suffer. Fitted to RRT* runs in open space, the model also recovers the planner's bias rate from path lengths alone.</p>
       </div>
       <dl class="params">
-        <dt>n</dt><dd>samples in the path, roughly the start-to-goal distance ÷ expansion radius</dd>
-        <dt>m</dt><dd>choices considered per step</dd>
-        <dt>c</dt><dd>chance a sample adds no excess length (goal bias)</dd>
+        <dt>n</dt><dd>number of samples</dd>
+        <dt>m</dt><dd>nearest-neighbor choices per sample</dd>
+        <dt>c</dt><dd>bias rate: chance a choice adds no excess length</dd>
         <dt>b</dt><dd>largest excess a single step can add</dd>
+        <dt>p</dt><dd>(1 − c)<sup>m</sup>, chance a sample adds some excess</dd>
+        <dt>n′</dt><dd>np/(2 − p), effective number of samples</dd>
       </dl>
     </div>
 
@@ -301,24 +300,24 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
       <div class="explorer">
         <div class="ctl">
           <div class="presets" role="group" aria-label="Presets">
-            <button type="button" data-p="19,4,0.5,6">Large radius</button>
-            <button type="button" data-p="146,4,0.5,6">Small radius</button>
-            <button type="button" data-p="40,4,0.85,6">Strong goal bias</button>
-            <button type="button" data-p="20,4,0,6">No bias (PRM-like)</button>
+            <button type="button" data-p="40,4,0,6">No bias</button>
+            <button type="button" data-p="40,4,0.05,6">Light bias</button>
+            <button type="button" data-p="40,4,0.3,6">Moderate bias</button>
+            <button type="button" data-p="40,4,0.6,6">Strong bias</button>
           </div>
-          <label><span><b>n</b> samples in path<output id="o-n"></output></span><input id="s-n" type="range" min="1" max="150" step="1"></label>
-          <label><span><b>m</b> choices per step<output id="o-m"></output></span><input id="s-m" type="range" min="1" max="20" step="0.5"></label>
-          <label><span><b>c</b> goal bias<output id="o-c"></output></span><input id="s-c" type="range" min="0" max="0.99" step="0.01"></label>
+          <label><span><b>n</b> samples<output id="o-n"></output></span><input id="s-n" type="range" min="1" max="150" step="1"></label>
+          <label><span><b>m</b> choices per sample<output id="o-m"></output></span><input id="s-m" type="range" min="1" max="20" step="0.5"></label>
+          <label><span><b>c</b> bias rate<output id="o-c"></output></span><input id="s-c" type="range" min="0" max="0.99" step="0.01"></label>
           <label><span><b>b</b> max step excess (m)<output id="o-b"></output></span><input id="s-b" type="range" min="0.5" max="15" step="0.5"></label>
-          <p class="small">Preset values are illustrative, not the paper's fitted parameters. "Large" and "small radius" put a 35&nbsp;m trip at expansion radii of 1.84&nbsp;m and 0.24&nbsp;m.</p>
+          <p class="small">Preset values are illustrative, not fitted to the paper's experiments.</p>
         </div>
         <div style="display:grid;gap:14px;min-width:0">
-          <span class="badge" id="badge"><i></i><span></span></span>
+          <div class="legend"><span><i style="background:var(--sim)"></i>Exact distribution</span><span><i style="background:var(--field)"></i>Chance of exactly zero</span><span><i style="background:transparent;border:2px dashed var(--text);border-radius:0;height:0;width:16px;vertical-align:3px"></i>Gamma approximation, shape n′</span></div>
           <div id="epl" role="img" aria-label="Plot of the excess path length distribution for the chosen parameters"></div>
           <div class="readout">
             <div><b id="r-zero"></b><span>chance the path is exactly optimal, (1 − p)<sup>n</sup></span></div>
             <div><b id="r-mean"></b><span>mean excess path length, np/λ</span></div>
-            <div><b id="r-odds"></b><span>odds a step adds nothing, against the (n − 1)/2 needed</span></div>
+            <div><b id="r-neff"></b><span>effective samples n′ = np/(2 − p), out of n</span></div>
           </div>
         </div>
       </div>
@@ -344,12 +343,12 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
       </div>
       <div class="vids">
         <figure>
-          <video data-src="media/husky-field.mp4" poster="media/husky-field.jpg" autoplay loop muted playsinline width="432" height="768" aria-label="The Husky robot driving across a mown grass field"></video>
-          <figcaption>Grass field (2× speed).</figcaption>
+          <video data-src="media/husky-field.mp4" poster="media/husky-field.jpg" autoplay loop muted playsinline width="432" height="768" aria-label="The Husky robot driving across a mown grass field at the Michigan Tech Recreational Trails"></video>
+          <figcaption>Field testing at the Michigan Tech Recreational Trails: open grass (2× speed).</figcaption>
         </figure>
         <figure>
-          <video data-src="media/husky-trail.mp4" poster="media/husky-trail.jpg" autoplay loop muted playsinline width="432" height="768" aria-label="The Husky robot driving along a dirt trail through woods toward the camera"></video>
-          <figcaption>Woodland trail (2× speed).</figcaption>
+          <video data-src="media/husky-trail.mp4" poster="media/husky-trail.jpg" autoplay loop muted playsinline width="432" height="768" aria-label="The Husky robot driving along a dirt trail at the Michigan Tech Recreational Trails"></video>
+          <figcaption>Field testing at the Michigan Tech Recreational Trails: a dirt trail through the trees (2× speed).</figcaption>
         </figure>
         <div class="prose">
           <h3>Next</h3>
@@ -500,14 +499,19 @@ var EPL = (function () {
     }
     return s;
   }
-  function modeAtZero(M) { return M.p <= 2 / (M.n + 1); } // Theorem 1: (1-c)^m <= (1 + (n-1)/2)^-1
-  return { model: model, density: density, modeAtZero: modeAtZero };
+  // Theorem II.3: V ≈ Gamma(shape n' = np/(2-p), rate λ' = λ/(2-p))
+  function approx(M, v) {
+    var k = M.n * M.p / (2 - M.p), r = M.lam / (2 - M.p);
+    if (k < 0.05 || v <= 0) return NaN;
+    return Math.exp(k * Math.log(r) + (k - 1) * Math.log(v) - r * v - lgamma(k));
+  }
+  return { model: model, density: density, approx: approx, neff: function (M) { return M.n * M.p / (2 - M.p); } };
 })();
 
 (function () {
   var S = { n: document.getElementById('s-n'), m: document.getElementById('s-m'), c: document.getElementById('s-c'), b: document.getElementById('s-b') };
   var O = { n: document.getElementById('o-n'), m: document.getElementById('o-m'), c: document.getElementById('o-c'), b: document.getElementById('o-b') };
-  var el = document.getElementById('epl'), badge = document.getElementById('badge'), presets = document.querySelectorAll('.presets button');
+  var el = document.getElementById('epl'), presets = document.querySelectorAll('.presets button');
   function set(vals) { ['n', 'm', 'c', 'b'].forEach(function (k, i) { S[k].value = vals[i]; }); }
   function pct(x) { return x >= 0.995 ? '>99%' : x < 0.005 && x > 0 ? '<1%' : Math.round(100 * x) + '%'; }
   function draw() {
@@ -521,7 +525,11 @@ var EPL = (function () {
     var W = Math.max(300, Math.round(el.clientWidth)), H = W < 560 ? 220 : 260, L = 14, R = 14, T = 26, B = 40, pw = W - L - R, ph = H - T - B;
     var xmax = Math.max(M.mean + 4.5 * M.sd, 3 / M.lam, 0.5);
     var N = 240, pts = [], ymax = 0;
-    for (var i = 0; i <= N; i++) { var v = xmax * i / N, d = EPL.density(M, v); pts.push([v, d]); if (d > ymax) ymax = d; }
+    var apx = [];
+    for (var i = 0; i <= N; i++) { var v = xmax * i / N, d = EPL.density(M, v), a = EPL.approx(M, v); pts.push([v, d]); if (d > ymax) ymax = d; if (isFinite(a)) apx.push([v, a]); }
+    var amax = apx.reduce(function (m, q) { return Math.max(m, q[1]); }, 0);
+    if (amax > ymax * 1.6) apx = apx.filter(function (q) { return q[1] <= ymax * 1.6; }); // the approximation spikes near zero when n' < 1; clip it
+    apx.forEach(function (q) { if (q[1] > ymax) ymax = q[1]; });
     ymax = ymax > 0 ? ymax * 1.12 : 1;
     var X = function (v) { return L + pw * v / xmax; }, Y = function (d) { return T + ph - ph * d / ymax; };
     var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">';
@@ -536,6 +544,7 @@ var EPL = (function () {
       s += '<path d="' + d + '" fill="var(--sim)" fill-opacity=".16" stroke="none"/>';
       s += '<polyline points="' + pts.map(function (q) { return X(q[0]).toFixed(1) + ',' + Y(q[1]).toFixed(1); }).join(' ') + '" fill="none" stroke="var(--sim)" stroke-width="2" stroke-linejoin="round"/>';
     }
+    if (apx.length > 1) s += '<polyline points="' + apx.map(function (q) { return X(q[0]).toFixed(1) + ',' + Y(q[1]).toFixed(1); }).join(' ') + '" fill="none" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4"/>';
     s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + (T + ph) + '" y2="' + (T + ph) + '" stroke="var(--ink-3)"/>';
     if (M.mass > 0.001) { // probability mass at zero: a stem, labelled with its probability (not on the density scale)
       s += '<line x1="' + X(0) + '" x2="' + X(0) + '" y1="' + (T + ph) + '" y2="' + (T + 4) + '" stroke="var(--field)" stroke-width="3" stroke-linecap="round"/>';
@@ -543,17 +552,14 @@ var EPL = (function () {
       s += '<text x="' + (X(0) + 10) + '" y="' + (T + 8) + '" style="fill:var(--text);font-weight:600">' + pct(M.mass) + ' exactly optimal</text>';
     }
     el.innerHTML = s + '</svg>';
-    var yes = EPL.modeAtZero(M);
-    badge.className = 'badge' + (yes ? ' yes' : '');
-    badge.lastElementChild.textContent = yes ? 'Theorem 1 holds: most likely excess is zero' : 'Theorem 1 fails: the mode moves away from zero';
     document.getElementById('r-zero').textContent = pct(M.mass);
     document.getElementById('r-mean').textContent = M.mean < 10 ? M.mean.toFixed(2) + ' m' : M.mean.toFixed(1) + ' m';
-    var odds = M.p > 0 ? (1 - M.p) / M.p : Infinity;
-    document.getElementById('r-odds').textContent = (odds === Infinity ? '∞' : odds >= 100 ? Math.round(odds) : odds.toFixed(1)) + ' vs ' + ((n - 1) / 2).toFixed(1);
+    var ne = EPL.neff(M);
+    document.getElementById('r-neff').textContent = (ne < 10 ? ne.toFixed(1) : Math.round(ne)) + ' of ' + n;
   }
   presets.forEach(function (btn) { btn.addEventListener('click', function () { set(btn.dataset.p.split(',')); draw(); }); });
   Object.keys(S).forEach(function (k) { S[k].addEventListener('input', draw); });
-  set([19, 4, 0.5, 6]); draw();
+  set([40, 4, 0.3, 6]); draw();
   var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 120); });
 })();
 
