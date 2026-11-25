@@ -34,7 +34,6 @@ main .eyebrow { margin: 0; }
 /* hero */
 .hero-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 1rem; }
 .hero-top .eyebrow { margin: 0; }
-.draft { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 2px 9px; }
 .authors { margin: 22px 0 4px; color: #f4f3ee; font-weight: 500; }
 .authors span { white-space: nowrap; }
 .affil { color: #a4a6ad; font-size: .95rem; margin: 0; }
@@ -48,6 +47,7 @@ main .eyebrow { margin: 0; }
 figure { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
 figure img, figure video { width: 100%; height: auto; border-radius: var(--radius); background: #000; }
 figcaption { color: var(--muted); font-size: .9rem; }
+.photo43 { aspect-ratio: 4 / 3; object-fit: cover; }
 .on-white { background: #fff; border-radius: var(--radius); padding: 10px; }
 .on-white img { border-radius: 4px; background: #fff; }
 .grid2 { display: grid; gap: 22px; }
@@ -140,7 +140,7 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
 <header class="hero page">
   <div class="wrap">
     <a class="crumb" href="../"><img src="../assets/RASL/logo-gold-outline.svg" alt="" width="24" height="30">Robust Autonomous Systems Lab</a>
-    <div class="hero-top"><p class="eyebrow">Off-road mobility &amp; planning</p><span class="draft">Draft</span></div>
+    <div class="hero-top"><p class="eyebrow">Off-road mobility &amp; planning</p></div>
     <h1>Driving on <span style="color:var(--gold)">point clouds</span> in rough terrain</h1>
     <p class="lede">MUONS, Michigan Tech's Off-road Navigation Stack, plans paths for ground robots directly on lidar point clouds, with no costmap in between. We tested it in 30,000 simulated traversals and in the field. We also derived a model of how far a sample-based planner's path strays from the shortest one, and used it to make planners converge faster.</p>
     <p class="authors"><span>Casey D. Majhor</span> · <span>Chaz Cornwall</span> · <span>Logan Schexnaydre</span> · <span>Ian Mattson</span> · <span>Jeremy P. Bos</span></p>
@@ -333,12 +333,12 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
       </div>
       <div class="grid2">
         <figure>
-          <img src="media/field-start.jpg" width="1400" height="1120" alt="The Husky robot with a sensor mast on a grassy, rocky slope below autumn trees" loading="lazy">
+          <img class="photo43" src="media/field-start.jpg" width="1400" height="1120" alt="The Husky robot with a sensor mast on a grassy, rocky slope below autumn trees" loading="lazy">
           <figcaption>Start pose for one of the field tasks.</figcaption>
         </figure>
         <figure>
-          <img src="media/husky-sensors.jpg" width="1100" height="880" alt="The Husky on a rocky slope, with labels pointing to the 3D lidar, GNSS antenna, GNSS/INS and IMU" loading="lazy">
-          <figcaption>The Husky's sensors, on the rock field between start and goal.</figcaption>
+          <img class="photo43" src="media/husky-rocks.jpg" width="1500" height="1125" alt="The Husky robot with its sensor mast on a slope of rounded rocks and gravel, autumn trees behind" loading="lazy">
+          <figcaption>The Husky on the rock field between start and goal.</figcaption>
         </figure>
       </div>
       <div class="vids">
