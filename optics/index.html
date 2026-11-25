@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atmospheric and Underwater Optics</title>
+<meta name="description" content="Optical turbulence research at the Robust Autonomous Systems Laboratory, Michigan Tech: imaging through turbulence over horizontal paths and measuring turbulence underwater in Lake Superior.">
+<link rel="icon" href="../assets/RASL/flame-avatar-square.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/RASL/flame-avatar-square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<style>
+.stack { display: grid; gap: 22px; }
+.stack > *, .media > *, .projects > * { min-width: 0; }
+.head { display: grid; gap: 8px; }
+.head p { max-width: 68ch; margin: 0; }
+.muted { color: var(--muted); }
+.projects { display: grid; gap: 22px; }
+@media (min-width: 760px) { .projects { grid-template-columns: 1fr 1fr; } }
+.projects .card { padding: 0; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.projects .thumb { aspect-ratio: 16 / 9; width: 100%; object-fit: cover; background: #000; border-radius: 0; }
+.projects .body { padding: 20px 22px 22px; display: grid; gap: 8px; align-content: start; }
+.projects .body p { margin: 0; }
+.projects .tags { font: 500 12px/1.4 var(--f-mono); color: var(--ink-3); letter-spacing: .04em; }
+.media { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); max-width: 760px; }
+.media figure { margin: 0; display: grid; gap: 8px; }
+.media video { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); background: #000; }
+.media .trim { overflow: hidden; border-radius: var(--radius); background: #000; }
+.media .trim video { width: calc(100% + 8px); max-width: none; margin: -4px; border-radius: 0; }
+.media figcaption { color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body class="optics">
+
+<header class="hero page">
+  <div class="wrap">
+    <a class="crumb" href="../"><img src="../assets/RASL/logo-gold-outline.svg" alt="" width="24" height="30">Robust Autonomous Systems Lab</a>
+    <p class="eyebrow">Research area</p>
+    <h1>Atmospheric &amp; underwater optics</h1>
+    <p class="lede">Random fluctuations in temperature, and underwater in salinity, bend light as it travels. The result is blurred, warped images and fading optical links. We simulate optical turbulence, measure it in air and in Lake Superior, and work on seeing and communicating through it.</p>
+  </div>
+</header>
+
+<main>
+  <section class="wrap stack">
+    <div class="head">
+      <p class="eyebrow">Projects</p>
+      <h2>Current work</h2>
+    </div>
+    <div class="projects">
+      <article class="card linked">
+        <img class="thumb" src="../turbulence/moderate.jpg" width="400" height="400" alt="A blurred, warped black-and-white photo of beached fishing boats, as seen through simulated turbulence" loading="lazy">
+        <div class="body">
+          <h3><a class="card-link" href="../turbulence/">Imaging through turbulence</a></h3>
+          <p class="muted">A physics-based simulator for cameras looking across a kilometer of air near the ground, where every part of the scene blurs differently.</p>
+          <p class="tags">Simulation · anisoplanatism · GPU</p>
+        </div>
+      </article>
+      <article class="card linked">
+        <img class="thumb" src="../underwater/media/rov-surface.jpg" width="960" height="540" alt="A BlueROV2 underwater robot at the surface of Lake Superior trailing a yellow tether" loading="lazy">
+        <div class="body">
+          <h3><a class="card-link" href="../underwater/">Underwater optical turbulence</a></h3>
+          <p class="muted">Measuring turbulence strength in Lake Superior with an LED array, a fiducial tag and an underwater robot, toward longer-range optical links underwater.</p>
+          <p class="tags">Field measurement · BlueROV2 · differential tilt</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap stack">
+      <div class="head">
+        <p class="eyebrow">Gallery</p>
+        <h2>Light through turbulence</h2>
+        <p class="muted">For wave-optics simulation, see <a href="https://github.com/jpbos/WavePy">WavePy</a>, our open-source Python package.</p>
+      </div>
+      <div class="media">
+        <figure>
+          <div class="trim">
+            <video data-src="../assets/beam_turbulence.mp4" poster="../assets/beam_turbulence.jpg" autoplay loop muted playsinline width="538" height="538" aria-label="Animated laser beam intensity pattern fluctuating as it propagates through atmospheric turbulence"></video>
+          </div>
+          <figcaption>Laser beam propagation through turbulence</figcaption>
+        </figure>
+        <figure>
+          <video data-src="../assets/underwater_imaging.mp4" poster="../assets/underwater_imaging.jpg" autoplay loop muted playsinline width="256" height="256" aria-label="Animated view of fish behind netting, distorted by moving water"></video>
+          <figcaption>Imaging through turbulence underwater</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <img class="logo" src="../assets/RASL/flame-avatar-square-transparent.svg" alt="RASL logo" width="72" height="72" loading="lazy">
+  <p><a href="../">Robust Autonomous Systems Laboratory</a> · Michigan Tech · <a href="https://github.com/Robust-Autonomous-Systems-Laboratory">GitHub</a></p>
+</footer>
+
+<script>
+(function () {
+  var vids = document.querySelectorAll('video[data-src]');
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function load(v) { if (still) { v.autoplay = false; v.controls = true; } v.src = v.dataset.src; v.removeAttribute('data-src'); }
+  if (!('IntersectionObserver' in window)) { vids.forEach(load); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+  }, { rootMargin: '200px' });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+</script>
+</body>
+</html>

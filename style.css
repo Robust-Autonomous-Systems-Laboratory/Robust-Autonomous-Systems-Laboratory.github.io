@@ -138,3 +138,22 @@ section.band { background: var(--paper-2); }
 .hero.page h1 { color: #f4f3ee; max-width: 16em; }
 .hero.page .lede { max-width: 46em; margin: 0; }
 main .eyebrow { color: var(--link); }
+
+/* Optics pages: the home page's stylesheet, fonts and gold, with a few quiet differences:
+   neutrals tinted slightly cool, section labels in mono, and steel blue for data. */
+body.optics {
+  --paper: #f8f9f9; --paper-2: #eef0f0; --line: #d9dcdc; --ink-3: #6a6f78;
+  --bar: #3f6b86; --accent-ink: #8a6a00; --fit: var(--text); --rule: var(--line); --ink-2: var(--muted);
+  --f-display: "Space Grotesk", Inter, sans-serif; --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  body.optics { --paper: #121417; --paper-2: #191c20; --line: #2a2e34; --ink-3: #8b9099; --bar: #7eaac4; --accent-ink: #ffcd00; }
+}
+.optics h2, .optics h3 { margin: 0; }
+.optics .hero { background: #0f1217; }
+.optics main .eyebrow { font: 500 12px/1.3 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; margin: 0; }
+.optics .card { padding: 20px; min-width: 0; overflow: hidden; }
+
+/* Two-level breadcrumb on optics project pages */
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 40px; color: #6e7077; }
+.crumbs .crumb { margin-bottom: 0; }

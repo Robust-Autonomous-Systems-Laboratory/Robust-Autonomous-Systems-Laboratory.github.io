@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Underwater Optical Turbulence</title>
+<meta name="description" content="Measuring optical turbulence underwater in Lake Superior with an LED array, an AprilTag and a BlueROV2, for longer-range underwater optical communication. Robust Autonomous Systems Laboratory, Michigan Tech.">
+<meta property="og:title" content="Underwater optical turbulence in Lake Superior">
+<meta property="og:image" content="https://robust-autonomous-systems-laboratory.github.io/underwater/media/rov-boat.jpg">
+<link rel="icon" href="../assets/RASL/flame-avatar-square.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/RASL/flame-avatar-square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<style>
+.stack { display: grid; gap: 20px; }
+.stack > *, .grid2 > * { min-width: 0; }
+.head { display: grid; gap: 8px; }
+.head p, .prose p { max-width: 68ch; margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; color: var(--ink-3); margin: 0; }
+.prose { display: grid; gap: 14px; }
+.authors { margin: 22px 0 4px; color: #f4f3ee; font-weight: 500; }
+.authors span { white-space: nowrap; }
+.affil { color: #a4a6ad; font-size: .95rem; margin: 0; }
+.btns { list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.btns a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid #3a3c42; background: #1b1c20; color: #f4f3ee; text-decoration: none; font-weight: 600; font-size: .95rem; }
+.btns a:hover, .btns a:focus-visible { border-color: var(--gold); color: var(--gold); }
+.btns small { font-weight: 500; color: #a4a6ad; }
+figure { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+figure img, figure video { width: 100%; height: auto; border-radius: var(--radius); background: #000; }
+figcaption { color: var(--muted); font-size: .9rem; }
+.on-white { background: #fff; border-radius: var(--radius); padding: 10px; }
+.on-white img { border-radius: 4px; background: #fff; }
+.grid2 { display: grid; gap: 22px; }
+@media (min-width: 860px) { .grid2 { grid-template-columns: 1fr 1fr; align-items: start; } }
+.lead-grid { display: grid; gap: 22px; }
+@media (min-width: 860px) { .lead-grid { grid-template-columns: 300px 1fr; align-items: start; } }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; }
+.stat { border-top: 3px solid var(--gold); padding-top: 10px; display: grid; gap: 4px; align-content: start; }
+.stat b { font: 700 28px/1.05 var(--f-display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 14px; color: var(--muted); }
+ol.how { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; max-width: 72ch; }
+ol.how li::marker { color: var(--link); font-family: var(--f-mono); }
+.vids { display: grid; gap: 22px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .vids { grid-template-columns: 1fr 2.4fr; align-items: start; } }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+th { font: 500 12px/1.3 var(--f-mono); letter-spacing: .04em; color: var(--ink-3); }
+td.n, th.n { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: 13.5px; }
+tr:last-child td { border-bottom: 0; }
+.papers { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.papers li { border-left: 3px solid var(--gold); padding-left: 14px; }
+.papers em { font-style: normal; color: var(--text); font-weight: 600; }
+.papers span { display: block; color: var(--muted); font-size: .95rem; }
+.bib { position: relative; }
+.bib pre { margin: 0; padding: 16px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; font: 12.5px/1.55 var(--f-mono); color: var(--text); }
+.bib button { position: absolute; top: 10px; right: 10px; font: 600 12.5px/1 Inter, sans-serif; padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--text); cursor: pointer; }
+.bib button:hover { border-color: var(--gold); }
+section.band.notes { padding-top: 28px; padding-bottom: 28px; }
+</style>
+</head>
+<body class="optics">
+
+<header class="hero page">
+  <div class="wrap">
+    <nav class="crumbs"><a class="crumb" href="../"><img src="../assets/RASL/logo-gold-outline.svg" alt="" width="24" height="30">Robust Autonomous Systems Lab</a><span aria-hidden="true">›</span><a class="crumb" href="../optics/">Optics</a></nav>
+    <p class="eyebrow">Underwater optics</p>
+    <h1>Measuring underwater optical turbulence in Lake Superior</h1>
+    <p class="lede">Light can carry data underwater far faster than sound: around 100&nbsp;Mbps over 100&nbsp;m, against a few kbps for acoustic modems. In clear water, turbulence becomes what limits an optical link's range. We built a low-cost way to measure it in open water, with a blue LED array, a fiducial tag and an underwater robot.</p>
+    <p class="authors"><span>Linda S. Albro</span> · <span>Dominik Fleury</span> · <span>Ian Mattson</span> · <span>Jeremy P. Bos</span></p>
+    <p class="affil">Department of Electrical and Computer Engineering, Michigan Technological University</p>
+    <ul class="btns">
+      <li><a href="https://doi.org/10.1117/12.3113975">Paper <small>SPIE 2026</small></a></li>
+      <li><a href="https://doi.org/10.1364/LSC.2025.LsW1C.5">Paper <small>Optica 2025</small></a></li>
+      <li><a href="#cite">BibTeX</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="wrap stack">
+    <div class="lead-grid">
+      <figure>
+        <video data-src="media/led-array.mp4" poster="media/led-array.jpg" autoplay loop muted playsinline width="300" height="300" aria-label="Grey underwater camera view of a 4 by 4 grid of LED points that shimmer slightly"></video>
+        <figcaption>What the camera sees across the path: 16 LEDs, each nudged slightly differently as turbulence bends its light.</figcaption>
+      </figure>
+      <div class="prose">
+        <p class="eyebrow">The measurement</p>
+        <h2>Sixteen points of light, one number for turbulence</h2>
+        <ol class="how">
+          <li>A 4×4 grid of 470&nbsp;nm LEDs, 8.57&nbsp;cm apart, is inlaid in a 0.6&nbsp;m AprilTag board that hangs 1.5&nbsp;m below a boat.</li>
+          <li>A BlueROV2 carrying a FLIR Blackfly camera is driven from the boat to about 15&nbsp;m away and aimed at the board.</li>
+          <li>The tag gives the camera's pose in every frame. That sets the path length and flattens the board's perspective, so ROV and boat motion can be removed.</li>
+          <li>Turbulence makes neighbouring LEDs jitter differently. The variance of that differential tilt across all 120 LED pairs, binned by separation, is fitted to a Kolmogorov template, giving the path-averaged turbulence strength C<sub>n</sub><sup>2</sup>.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="grid2">
+      <figure>
+        <img src="media/rov-boat.jpg" width="1047" height="391" alt="Left: a blue BlueROV2 with a camera tube and tether on a pebble beach. Right: the ROV in green water beside an aluminum boat, with the black and white tag board at the rail" loading="lazy">
+        <figcaption>The BlueROV2 with its optical payload, and in the water beside the boat.</figcaption>
+      </figure>
+      <figure>
+        <img src="media/homography.jpg" width="973" height="500" alt="Left: a hazy, tilted underwater view of the tag board with faint LED points. Right: the same LEDs after correction, a square grid on a flat grey field" loading="lazy">
+        <figcaption>The board through the ROV camera (left) and after the tag-based homography correction (right).</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap stack">
+      <div class="head">
+        <p class="eyebrow">Results · 25 July 2025</p>
+        <h2>Weak but measurable turbulence</h2>
+        <p class="muted">At this short range the camera's own noise is comparable to the signal. Removing the jitter common to all pairs (common-mode regression) before fitting doubles the fit quality. The result agrees, within a factor of two, with an independent estimate from intensity scintillation on the same dataset (1.4&nbsp;×&nbsp;10<sup>−13</sup>).</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>7.2 × 10<sup>−14</sup></b><span>C<sub>n</sub><sup>2</sup> in m<sup>−2/3</sup>, mean of 7 data segments</span></div>
+        <div class="stat"><b>39 cm</b><span>Fried coherence length r<sub>0</sub></span></div>
+        <div class="stat"><b>2 × 10<sup>−4</sup></b><span>Rytov variance: well inside weak scattering</span></div>
+        <div class="stat"><b>0.33 → 0.69</b><span>template fit R² without and with common-mode correction</span></div>
+      </div>
+      <div class="grid2">
+        <figure>
+          <div class="on-white"><img src="media/structure-function.png" width="1350" height="900" alt="Plot of differential tilt variance against LED separation from 0.08 to 0.36 m. Uncorrected points (orange) sit above the corrected points (purple); both rise with separation and follow fitted curves, R squared 0.334 and 0.685" loading="lazy"></div>
+          <figcaption>Differential-tilt structure function, averaged over 7 segments, with and without the noise correction.</figcaption>
+        </figure>
+        <div class="prose">
+          <table>
+            <thead><tr><th>Method</th><th class="n">C<sub>n</sub><sup>2</sup> (m<sup>−2/3</sup>)</th><th class="n">r<sub>0</sub> (m)</th><th class="n">R²</th></tr></thead>
+            <tbody>
+              <tr><td>No subtraction</td><td class="n">1.72 × 10<sup>−13</sup></td><td class="n">0.259</td><td class="n">0.334</td></tr>
+              <tr><td>Common-mode</td><td class="n">7.19 × 10<sup>−14</sup></td><td class="n">0.392</td><td class="n">0.685</td></tr>
+            </tbody>
+          </table>
+          <p class="small">Lake Superior at Eagle River, Michigan. The water was slightly turbid after heavy rain, and the path was shallow. These numbers describe that one collection, not underwater turbulence in general.</p>
+          <p class="muted">Next: repeat the measurement across seasons, depths and clearer offshore water. We also want to characterize the noise floor so longer paths become usable, and to test non-Kolmogorov and outer-scale models.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap stack">
+    <div class="head">
+      <p class="eyebrow">In the field</p>
+      <h2>On the lake</h2>
+    </div>
+    <div class="vids">
+      <figure>
+        <video data-src="media/rov-dive.mp4" poster="media/rov-dive.jpg" autoplay loop muted playsinline width="406" height="720" aria-label="The ROV slipping under the surface beside the boat, its yellow tether trailing"></video>
+        <figcaption>The ROV heading out from the boat.</figcaption>
+      </figure>
+      <figure>
+        <video data-src="media/rov-surface.mp4" poster="media/rov-surface.jpg" autoplay loop muted playsinline width="960" height="540" aria-label="The ROV at the surface in choppy green water, trailing a yellow tether"></video>
+        <figcaption>The first lake day, in early July, when 7&nbsp;°C water and misconfigured thrusters stalled the attempt.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band" id="cite">
+    <div class="wrap stack">
+      <div class="head">
+        <p class="eyebrow">Papers</p>
+        <h2>Read more</h2>
+      </div>
+      <ul class="papers">
+        <li><em>Differential Tilt Measurements from Underwater Optical Turbulence in Lake Superior</em><span>L. S. Albro and J. P. Bos. Laser Communication and Propagation through the Atmosphere and Oceans XV, Proc. SPIE, 2026. <a href="https://doi.org/10.1117/12.3113975">doi:10.1117/12.3113975</a></span></li>
+        <li><em>Characterization of Underwater Optical Turbulence in Lake Superior Using an Autonomous Underwater Vehicle</em><span>J. P. Bos, L. Albro, D. Fleury and I. Mattson. Optica Laser Congress, 2025, paper LsW1C.5. <a href="https://doi.org/10.1364/LSC.2025.LsW1C.5">doi:10.1364/LSC.2025.LsW1C.5</a></span></li>
+        <li><em>Estimates of C<sub>n</sub><sup>2</sup> in the Open Ocean from the MREP 20 Sea Trial</em><span>J. P. Bos. Optica Imaging Congress (pcAOP), 2024, paper PF1E.6. <a href="https://doi.org/10.1364/pcAOP.2024.PF1E.6">doi:10.1364/pcAOP.2024.PF1E.6</a></span></li>
+      </ul>
+      <div class="bib">
+        <button type="button" data-copy="bibtex">Copy</button>
+<pre id="bibtex">@inproceedings{albro2026differential,
+  title     = {Differential Tilt Measurements from Underwater Optical Turbulence in Lake Superior},
+  author    = {Albro, Linda S. and Bos, Jeremy P.},
+  booktitle = {Laser Communication and Propagation through the Atmosphere and Oceans XV},
+  series    = {Proc. SPIE}, year = {2026},
+  doi       = {10.1117/12.3113975}
+}
+
+@inproceedings{bos2025underwater,
+  title     = {Characterization of Underwater Optical Turbulence in Lake Superior Using an Autonomous Underwater Vehicle},
+  author    = {Bos, Jeremy P. and Albro, Linda and Fleury, Dominik and Mattson, Ian},
+  booktitle = {Optica Laser Congress 2025},
+  pages     = {LsW1C.5}, year = {2025},
+  doi       = {10.1364/LSC.2025.LsW1C.5}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap notes" style="padding-top:28px;padding-bottom:28px">
+    <p class="small">A Michigan Tech SURF and REU project. Thanks to John Terhaar for help with the field setup.</p>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <img class="logo" src="../assets/RASL/flame-avatar-square-transparent.svg" alt="RASL logo" width="72" height="72" loading="lazy">
+  <p><a href="../">Robust Autonomous Systems Laboratory</a> · <a href="../optics/">Optics</a> · Michigan Tech</p>
+</footer>
+
+<script>
+(function () {
+  var vids = document.querySelectorAll('video[data-src]');
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function load(v) { if (still) { v.autoplay = false; v.controls = true; } v.src = v.dataset.src; v.removeAttribute('data-src'); }
+  if (!('IntersectionObserver' in window)) { vids.forEach(load); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+  }, { rootMargin: '200px' });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+document.querySelectorAll('[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var text = document.getElementById(btn.dataset.copy).textContent;
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); });
+  });
+});
+</script>
+</body>
+</html>
