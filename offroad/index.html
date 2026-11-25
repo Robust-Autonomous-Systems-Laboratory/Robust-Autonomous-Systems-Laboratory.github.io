@@ -163,7 +163,7 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
   <section class="wrap stack">
     <figure>
       <video data-src="media/field-run.mp4" poster="media/field-run.jpg" autoplay loop muted playsinline width="1120" height="450" aria-label="Top-down view of a lidar point-cloud map with a green path, and an inset video of the Husky robot driving over rocky ground"></video>
-      <figcaption>A field trial at our off-road test area. The path (green) runs over the lidar point-cloud map the robot plans on; the inset shows the Clearpath Husky driving it.</figcaption>
+      <figcaption>A field trial at our off-road test area. MUONS's planned path (green) runs over the lidar point-cloud map the robot plans on; the inset shows the Clearpath Husky driving it.</figcaption>
     </figure>
     <div class="stats">
       <div class="stat"><b>30,000</b><span>simulated A-to-B traversals</span></div>
@@ -179,7 +179,7 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
       <div class="head">
         <p class="eyebrow">Method</p>
         <h2>How MUONS plans</h2>
-        <p class="muted">Costmaps flatten terrain into 2D or 2.5D cells. They cannot say that a slope is fine head-on but a rollover from the side, and they struggle with overhangs and multi-level ground. MUONS, inspired by Krüsi et al.'s <em>Driving on Point Clouds</em>, plans in 3D on the lidar map itself. Every candidate waypoint is checked for whether the robot could actually stand there.</p>
+        <p class="muted">Costmaps flatten terrain into 2D or 2.5D cells. They cannot say that a slope is fine head-on but a rollover from the side, and they struggle with overhangs and multi-level ground. MUONS, inspired by Krüsi et al.'s <a href="https://doi.org/10.1002/rob.21700"><em>Driving on Point Clouds</em></a>, plans in 3D on the lidar map itself. Every candidate waypoint is checked for whether the robot could actually stand there.</p>
       </div>
       <ol class="pipeline">
         <li><b>Bi-RRT</b><span>Trees grown from start and goal find a kinematically feasible path quickly.</span></li>
@@ -367,6 +367,7 @@ section.band.notes { padding-top: 28px; padding-bottom: 28px; }
     <ul class="papers">
       <li><em>Performance Characterization of a Point-Cloud-Based Path Planner in Off-Road Terrain</em><span>C. D. Majhor and J. P. Bos. Journal of Field Robotics 43(2), 695–716, 2026. <a href="https://doi.org/10.1002/rob.70059">doi:10.1002/rob.70059</a></span></li>
       <li><em>Can We Get There Faster: Tuning Sample-Based Path Planners</em><span>C. Cornwall, C. Majhor, L. Schexnaydre, I. Mattson and J. P. Bos. IEEE Robotics and Automation Letters 11(6), 7238–7245, 2026. <a href="https://doi.org/10.1109/LRA.2026.3685923">doi:10.1109/LRA.2026.3685923</a></span></li>
+      <li><em>Driving on Point Clouds: Motion Planning, Trajectory Optimization, and Terrain Assessment in Generic Nonplanar Environments</em><span>P. Krüsi, P. Furgale, M. Bosse and R. Siegwart. Journal of Field Robotics 34(5), 940–984, 2017. <a href="https://doi.org/10.1002/rob.21700">doi:10.1002/rob.21700</a> · the work that inspired MUONS</span></li>
       <li><em>Multifractal Terrain Generation for Evaluating Autonomous Off-Road Ground Vehicles</em><span>C. D. Majhor and J. P. Bos. Journal of Autonomous Vehicles and Systems 5(2), 021003, 2025. <a href="https://doi.org/10.1115/1.4067769">doi:10.1115/1.4067769</a></span></li>
       <li><em>Unreal as a Simulation Environment for Off-Road Autonomy</em><span>P. Young, S. Kysar and J. P. Bos. Proc. SPIE 11415, 2020. <a href="https://doi.org/10.1117/12.2559006">doi:10.1117/12.2559006</a></span></li>
     </ul>
