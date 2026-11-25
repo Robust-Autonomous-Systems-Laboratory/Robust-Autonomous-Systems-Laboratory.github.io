@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Off-Road Autonomy on Point Clouds</title>
+<meta name="description" content="MUONS plans paths for off-road robots directly on lidar point clouds. Results from 30,000 simulated traversals, field trials, and a model of how far sample-based planners stray from the shortest path. Robust Autonomous Systems Laboratory, Michigan Tech.">
+<meta property="og:title" content="Off-road autonomy on point clouds">
+<meta property="og:description" content="MUONS: point-cloud path planning in rough terrain, from the Robust Autonomous Systems Laboratory at Michigan Tech.">
+<meta property="og:image" content="https://robust-autonomous-systems-laboratory.github.io/offroad/media/field-start.jpg">
+<link rel="icon" href="../assets/RASL/flame-avatar-square.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/RASL/flame-avatar-square.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<style>
+/* Autonomy page: the home page stylesheet plus the pieces an academic project page needs
+   (author line, paper buttons, figures, one chart, one interactive model, BibTeX). */
+:root {
+  --ink-3: #74767d; --sim: #2a78d6; --field: #b07f00;
+  --f-display: "Space Grotesk", Inter, sans-serif; --f-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root { --ink-3: #8b8d94; --sim: #3987e5; --field: #b08600; } }
+.stack { display: grid; gap: 20px; }
+.stack > p, .head p, .prose p { max-width: 68ch; margin: 0; }
+.head { display: grid; gap: 8px; }
+.head h2, h3 { margin: 0; }
+main .eyebrow { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; color: var(--ink-3); margin: 0; }
+.prose { display: grid; gap: 14px; }
+
+/* hero */
+.hero-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 1rem; }
+.hero-top .eyebrow { margin: 0; }
+.draft { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 2px 9px; }
+.authors { margin: 22px 0 4px; color: #f4f3ee; font-weight: 500; }
+.authors span { white-space: nowrap; }
+.affil { color: #a4a6ad; font-size: .95rem; margin: 0; }
+.btns { list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.btns a, .btns span { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid #3a3c42; background: #1b1c20; color: #f4f3ee; text-decoration: none; font-weight: 600; font-size: .95rem; }
+.btns a:hover, .btns a:focus-visible { border-color: var(--gold); color: var(--gold); }
+.btns small { font-weight: 500; color: #a4a6ad; }
+.btns span[aria-disabled] { opacity: .6; cursor: not-allowed; }
+
+/* figures and video */
+figure { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+figure img, figure video { width: 100%; height: auto; border-radius: var(--radius); background: #000; }
+figcaption { color: var(--muted); font-size: .9rem; }
+.on-white { background: #fff; border-radius: var(--radius); padding: 10px; }
+.on-white img { border-radius: 4px; background: #fff; }
+.grid2 { display: grid; gap: 22px; }
+@media (min-width: 860px) { .grid2 { grid-template-columns: 1fr 1fr; align-items: start; } .grid2.wide-left { grid-template-columns: 1.4fr 1fr; } }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px; }
+.stat { border-top: 3px solid var(--gold); padding-top: 10px; display: grid; gap: 4px; align-content: start; }
+.stat b { font: 700 30px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 14px; color: var(--muted); }
+ul.points { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; max-width: 72ch; }
+ul.points li::marker { color: var(--link); }
+
+/* pipeline */
+.pipeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; counter-reset: st; }
+@media (min-width: 860px) { .pipeline { grid-template-columns: repeat(4, 1fr); } }
+.pipeline li { position: relative; border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: var(--radius); padding: 16px; background: var(--paper); display: grid; gap: 4px; align-content: start; }
+.pipeline li b { font-family: var(--f-display); font-size: 1.05rem; }
+.pipeline li b::before { counter-increment: st; content: counter(st) "  "; color: var(--link); }
+.pipeline li span { color: var(--muted); font-size: .92rem; }
+@media (min-width: 860px) { .pipeline li:not(:last-child)::after { content: "\2192"; position: absolute; right: -13px; top: 50%; transform: translateY(-50%); color: var(--link); font-weight: 700; } }
+.ta { border: 1px dashed var(--line); border-radius: var(--radius); padding: 12px 16px; color: var(--muted); font-size: .95rem; }
+.ta b { color: var(--text); }
+
+/* ratio chart */
+.card { display: grid; gap: 12px; padding: 20px; min-width: 0; }
+.card p { margin: 0; }
+.card > *, .stack > *, .grid2 > * { min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 7px; vertical-align: -1px; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font-family: Inter, sans-serif; font-size: 13px; fill: var(--muted); }
+.chart .tick { font-family: var(--f-mono); font-size: 11.5px; fill: var(--ink-3); }
+.chart .rl { fill: var(--text); font-weight: 500; }
+details summary { cursor: pointer; color: var(--link); font-weight: 500; font-size: .95rem; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; margin-top: 10px; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+td.n, th.n { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: 13px; }
+.tablewrap { overflow-x: auto; }
+.tablewrap table { min-width: 520px; }
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--text); color: var(--paper); font-size: 13px; line-height: 1.45; padding: 8px 10px; border-radius: 6px; max-width: 280px; }
+
+/* math + explorer */
+math { font-size: 1.15em; }
+.eq { overflow-x: auto; padding: 14px 16px; background: var(--paper-2); border-radius: var(--radius); text-align: center; }
+.explorer { display: grid; gap: 22px; }
+@media (min-width: 900px) { .explorer { grid-template-columns: 300px 1fr; align-items: start; } }
+.ctl { display: grid; gap: 14px; }
+.ctl label { display: grid; gap: 4px; font-size: 14px; color: var(--muted); }
+.ctl label span { display: flex; align-items: baseline; gap: 6px; }
+.ctl label output { margin-left: auto; }
+.ctl label b { color: var(--text); font-weight: 600; }
+.ctl output { font-family: var(--f-mono); color: var(--text); font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { width: 100%; accent-color: var(--link); }
+.presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.presets button { font: 500 13px/1 Inter, sans-serif; padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--text); cursor: pointer; }
+.presets button:hover, .presets button[aria-pressed=true] { border-color: var(--gold); }
+.presets button[aria-pressed=true] { background: var(--paper-2); }
+.readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.readout div { display: grid; gap: 2px; }
+.readout b { font: 700 24px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.readout span { font-size: 13.5px; color: var(--muted); }
+.badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); justify-self: start; }
+.badge i { width: 10px; height: 10px; border-radius: 50%; background: var(--ink-3); }
+.badge.yes i { background: var(--gold); box-shadow: 0 0 0 2px rgba(255, 205, 0, .25); }
+#epl svg { display: block; width: 100%; height: auto; overflow: visible; }
+#epl text { font-family: Inter, sans-serif; font-size: 12.5px; fill: var(--muted); }
+#epl .tick { font-family: var(--f-mono); font-size: 11.5px; fill: var(--ink-3); }
+.params { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14.5px; margin: 0; }
+.params dt { font-family: var(--f-mono); color: var(--text); }
+.params dd { margin: 0; color: var(--muted); }
+
+/* videos */
+.vids { display: grid; gap: 22px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .vids { grid-template-columns: 1fr 1fr 1.6fr; } }
+.vids figure:last-child { grid-column: 1 / -1; }
+@media (min-width: 900px) { .vids figure:last-child { grid-column: auto; } }
+
+/* papers */
+.papers { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.papers li { border-left: 3px solid var(--gold); padding-left: 14px; }
+.papers em { font-style: normal; color: var(--text); font-weight: 600; }
+.papers span { display: block; color: var(--muted); font-size: .95rem; }
+.bib { position: relative; }
+.bib pre { margin: 0; padding: 16px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; font: 12.5px/1.55 var(--f-mono); color: var(--text); }
+.bib button { position: absolute; top: 10px; right: 10px; font: 600 12.5px/1 Inter, sans-serif; padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--text); cursor: pointer; }
+.bib button:hover { border-color: var(--gold); }
+section.band.notes { padding-top: 28px; padding-bottom: 28px; }
+.notes p { max-width: 90ch; }
+</style>
+</head>
+<body>
+
+<header class="hero page">
+  <div class="wrap">
+    <a class="crumb" href="../"><img src="../assets/RASL/logo-gold-outline.svg" alt="" width="24" height="30">Robust Autonomous Systems Lab</a>
+    <div class="hero-top"><p class="eyebrow">Off-road mobility &amp; planning</p><span class="draft">Draft</span></div>
+    <h1>Driving on <span style="color:var(--gold)">point clouds</span> in rough terrain</h1>
+    <p class="lede">MUONS, Michigan Tech's Off-road Navigation Stack, plans paths for ground robots directly on lidar point clouds, with no costmap in between. We tested it in 30,000 simulated traversals and in the field. We also derived a model that predicts how far a sample-based planner's path will stray from the straight line, and how to tune it.</p>
+    <p class="authors"><span>Casey D. Majhor</span> · <span>Chaz Cornwall</span> · <span>Logan Schexnaydre</span> · <span>Ian Mattson</span> · <span>Jeremy P. Bos</span></p>
+    <p class="affil">Department of Electrical and Computer Engineering, Michigan Technological University</p>
+    <ul class="btns">
+      <li><a href="https://doi.org/10.1002/rob.70059">Paper <small>J. Field Robotics</small></a></li>
+      <li><a href="https://doi.org/10.1109/LRA.2026.3685923">Paper <small>IEEE RA-L</small></a></li>
+      <li><a href="#videos">Videos</a></li>
+      <li><a href="#cite">BibTeX</a></li>
+      <li><span aria-disabled="true" title="Code release in preparation">Code <small>coming soon</small></span></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+
+  <section class="wrap stack">
+    <figure>
+      <video data-src="media/field-run.mp4" poster="media/field-run.jpg" autoplay loop muted playsinline width="1120" height="450" aria-label="Top-down view of a lidar point-cloud map with a green path, and an inset video of the Husky robot driving over rocky ground"></video>
+      <figcaption>A field trial at our off-road test area. The path (green) runs over the lidar point-cloud map the robot plans on; the inset shows the Clearpath Husky driving it.</figcaption>
+    </figure>
+    <div class="stats">
+      <div class="stat"><b>30,000</b><span>simulated A-to-B traversals</span></div>
+      <div class="stat"><b>0.98</b><span>success rate in simulation</span></div>
+      <div class="stat"><b>30 / 30</b><span>field trials completed</span></div>
+      <div class="stat"><b>15 × 3</b><span>missions on three multifractal terrains</span></div>
+      <div class="stat"><b>20</b><span>planner parameter sets compared</span></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap stack">
+      <div class="head">
+        <p class="eyebrow">Method</p>
+        <h2>How MUONS plans</h2>
+        <p class="muted">Costmaps flatten terrain into 2D or 2.5D cells. They cannot say that a slope is fine head-on but a rollover from the side, and they struggle with overhangs and multi-level ground. MUONS, inspired by Krüsi et al.'s <em>Driving on Point Clouds</em>, plans in 3D on the lidar map itself. Every candidate waypoint is checked for whether the robot could actually stand there.</p>
+      </div>
+      <ol class="pipeline">
+        <li><b>Bi-RRT</b><span>Trees grown from start and goal find a kinematically feasible path quickly.</span></li>
+        <li><b>RRT*</b><span>Rewiring shortens that first path.</span></li>
+        <li><b>Trajectory optimization</b><span>A local optimizer refines it for traversability, curvature and length.</span></li>
+        <li><b>Pure pursuit</b><span>The robot tracks a look-ahead point on the final path.</span></li>
+      </ol>
+      <p class="ta"><b>Terrain assessment</b> runs inside every planning stage. It fits a surface normal to a robot-sized patch of points to infer roll and pitch at each waypoint, and rejects ground rougher than a set limit.</p>
+      <figure>
+        <video data-src="media/rviz-planning.mp4" poster="media/rviz-planning.jpg" autoplay loop muted playsinline width="1000" height="478" aria-label="RViz view of a colored lidar point cloud with green search trees and a red path drawn between a building and trees"></video>
+        <figcaption>Planning in RViz during an early field test (2× speed). Search trees and paths are drawn over the live point-cloud map.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap stack">
+    <div class="head">
+      <p class="eyebrow">Simulation campaign</p>
+      <h2>30,000 trips across rough, randomly generated terrain</h2>
+      <p class="muted">A simulated Husky drives in Unreal Engine, which models the physics of the vehicle on the terrain. Terrains are generated with a multifractal method, so each new map has the same roughness statistics but different features. On each of three terrains we picked five random start–goal pairs 35&nbsp;m apart. Every mission was run 100 times with each of 20 planner parameter sets.</p>
+    </div>
+    <div class="grid2 wide-left">
+      <figure>
+        <img src="media/unreal-terrain.jpg" width="831" height="486" alt="A simulated Husky robot on grey, rough multifractal terrain in Unreal Engine" loading="lazy">
+        <figcaption>The simulated Husky on terrain 1.</figcaption>
+      </figure>
+      <figure>
+        <div class="on-white"><img src="media/terrain-missions.png" width="338" height="337" alt="Grey elevation map with five numbered green start points joined by lines to red goal points" loading="lazy"></div>
+        <figcaption>Missions 1–5 on terrain 1: green starts, red goals.</figcaption>
+      </figure>
+    </div>
+    <div class="grid2">
+      <ul class="points">
+        <li><strong>Reliable.</strong> MUONS reached the goal in 0.98 of trials. Compared with driving the straight line, success rose by 0.23 to 0.47 depending on the terrain.</li>
+        <li><strong>A predictable detour.</strong> The extra distance needed to get there is close to exponentially distributed, with a mean of about 7&nbsp;m on a 35&nbsp;m trip.</li>
+        <li><strong>Mission beats roughness.</strong> With MUONS, rougher terrain cost only 0.01 in success rate (0.25 for the straight line). Which start and goal you pick matters more.</li>
+        <li><strong>Tune broadly.</strong> Parameters tuned for one mission did not carry over to others, even on the same terrain. Tune for the platform across many terrains and missions.</li>
+      </ul>
+      <figure>
+        <img src="media/path-heatmaps.jpg" width="1100" height="1199" alt="Fifteen small heatmaps of planned paths, one per mission, in three columns by terrain; most are arcs, mission 2 is an S shape" loading="lazy">
+        <figcaption>Where the planned paths went, per mission, across all parameter sets (start on the left, goal on the right). Mission&nbsp;2's S-shape made it the hardest to plan.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap stack">
+      <div class="head">
+        <p class="eyebrow">Sim-to-real</p>
+        <h2>Simulation predicts the field</h2>
+        <p class="muted">We ranked the 20 parameter sets in simulation and took the best (PS3), a typical one (PS13) and the worst (PS18) to rocky, sloped ground. There we ran two 34&nbsp;m tasks five times per set, with roll and pitch limited to ±0.15&nbsp;rad. Absolute numbers differ because field maps are smaller and run on different hardware, so a median plan took about 3&nbsp;s in the field against 35&nbsp;s in simulation. The ratios between parameter sets nearly match.</p>
+      </div>
+      <div class="card">
+        <h3>Median performance relative to the typical set (PS13)</h3>
+        <div class="legend"><span><i style="background:var(--sim)"></i>Simulation (≈1,500 trials per set)</span><span><i style="background:var(--field)"></i>Field (10 trials per set)</span></div>
+        <div class="chart" id="ratio" role="img" aria-label="Dot chart comparing simulation and field ratios of median planning time and excess path length between parameter sets. Planning time best over typical: 0.27 simulation, 0.28 field. Planning time worst over typical: 4.44 simulation, 5.46 field. Excess path best over typical: 0.66 simulation, 0.60 field. Excess path worst over typical: 3.55 simulation, 1.76 field."></div>
+        <details>
+          <summary>Show as a table</summary>
+          <div class="tablewrap"><table>
+            <thead><tr><th>Ratio of medians</th><th class="n">Simulation</th><th class="n">Field</th></tr></thead>
+            <tbody>
+              <tr><td>Planning time, best ÷ typical (PS3 / PS13)</td><td class="n">0.27</td><td class="n">0.28</td></tr>
+              <tr><td>Planning time, worst ÷ typical (PS18 / PS13)</td><td class="n">4.44</td><td class="n">5.46</td></tr>
+              <tr><td>Excess path length, best ÷ typical (PS3 / PS13)</td><td class="n">0.66</td><td class="n">0.60</td></tr>
+              <tr><td>Excess path length, worst ÷ typical (PS18 / PS13)</td><td class="n">3.55</td><td class="n">1.76</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small" style="margin-top:8px">Ratios as reported in the paper. Excess path length is the distance driven beyond the straight line.</p>
+        </details>
+      </div>
+      <div class="grid2">
+        <div class="prose">
+          <h3>One knob matters most</h3>
+          <p class="muted">Of the seven tuning parameters, the expansion radius of the first Bi-RRT stage correlates most strongly with every metric (Spearman partial ρ from −0.71 to −0.98). A larger radius finds paths faster, shorter and more consistently, at some cost in success rate. It shapes the first path that every later stage refines.</p>
+          <p class="muted">The finding supports Monte Carlo simulation for tuning off-road planners. A short field campaign can then confirm the result, instead of a long one discovering it.</p>
+        </div>
+        <figure>
+          <div class="on-white"><img src="media/spearman.png" width="875" height="656" alt="Grayscale heatmap of correlations between seven planner parameters and five performance metrics; the Bi-RRT expansion radius column is darkest, between -0.71 and -0.98" loading="lazy"></div>
+          <figcaption>Correlation between planner parameters and performance across the campaign.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap stack">
+    <div class="head">
+      <p class="eyebrow">Theory · IEEE RA-L</p>
+      <h2>How far from the shortest path?</h2>
+      <p class="muted">A sample-based planner trades feasibility (finding any path) against optimality (finding a short one). We model that trade-off directly. At each of <i>n</i> steps the planner picks the best of <i>m</i> random choices. With probability set by its goal bias <i>c</i>, the step adds nothing, and otherwise it adds some excess length, at most <i>b</i>. Summing the steps gives a closed form for the distribution of excess path length (EPL) in terms of the planner's own parameters.</p>
+    </div>
+    <div class="eq" aria-label="f sub V of v equals one minus p to the n times delta of v, plus the sum from k equals 1 to n of the binomial probability B of k given n and p times the gamma density of v with shape k and rate lambda, where p equals one minus c to the m and lambda equals m over b.">
+      <math display="block"><mrow>
+        <msub><mi>f</mi><mi>V</mi></msub><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo>=</mo>
+        <munder><munder accentunder="true"><mrow><msup><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><mi>n</mi></msup><mi>δ</mi><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><mo>⏟</mo></munder><mtext>exactly optimal</mtext></munder>
+        <mo>+</mo>
+        <munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover>
+        <mi>B</mi><mo stretchy="false">(</mo><mi>k</mi><mo>;</mo><mi>n</mi><mo>,</mo><mi>p</mi><mo stretchy="false">)</mo><mspace width="0.2em"/><mi>Γ</mi><mo stretchy="false">(</mo><mi>v</mi><mo>;</mo><mi>k</mi><mo>,</mo><mi>λ</mi><mo stretchy="false">)</mo>
+        <mo>,</mo><mspace width="1em"/>
+        <mi>p</mi><mo>=</mo><msup><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><mi>m</mi></msup><mo>,</mo><mspace width="0.6em"/>
+        <mi>λ</mi><mo>=</mo><mfrac><mi>m</mi><mi>b</mi></mfrac>
+      </mrow></math>
+    </div>
+    <div class="grid2">
+      <div class="prose">
+        <p class="muted">A perfect step only passes earlier errors along, while an imperfect one adds to them. That is why the result is a binomial blend of gamma distributions. It collapses to a spike at zero as goal bias rises (<i>c</i>&nbsp;→&nbsp;1), as choices per step grow (<i>m</i>&nbsp;→&nbsp;∞), or as obstacles vanish (<i>b</i>&nbsp;→&nbsp;0). With no goal bias, as in PRM, it becomes a pure gamma distribution, and for long paths it tends to a normal one.</p>
+        <p class="muted"><strong>Theorem&nbsp;1</strong> gives a one-line tuning rule. If the odds that a step adds nothing, (1&nbsp;−&nbsp;p)/p, are at least (n&nbsp;−&nbsp;1)/2, then the most likely excess path length is zero.</p>
+        <p class="muted">The model fits RRT* and PRM in open 2D tests and an RRT-based planner on the simulated Husky across 15 terrains. Between the best and worst Husky parameter sets (Bi-RRT expansion radius 1.84&nbsp;m against 0.24&nbsp;m, PS3 and PS18 above), only <i>n</i> had to change. That links the theory to the knob that mattered most in the field study.</p>
+      </div>
+      <dl class="params">
+        <dt>n</dt><dd>samples in the path, roughly the start-to-goal distance ÷ expansion radius</dd>
+        <dt>m</dt><dd>choices considered per step</dd>
+        <dt>c</dt><dd>chance a sample adds no excess length (goal bias)</dd>
+        <dt>b</dt><dd>largest excess a single step can add</dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h3>Try it: tune a planner</h3>
+      <div class="explorer">
+        <div class="ctl">
+          <div class="presets" role="group" aria-label="Presets">
+            <button type="button" data-p="19,4,0.5,6">Large radius</button>
+            <button type="button" data-p="146,4,0.5,6">Small radius</button>
+            <button type="button" data-p="40,4,0.85,6">Strong goal bias</button>
+            <button type="button" data-p="20,4,0,6">No bias (PRM-like)</button>
+          </div>
+          <label><span><b>n</b> samples in path<output id="o-n"></output></span><input id="s-n" type="range" min="1" max="150" step="1"></label>
+          <label><span><b>m</b> choices per step<output id="o-m"></output></span><input id="s-m" type="range" min="1" max="20" step="0.5"></label>
+          <label><span><b>c</b> goal bias<output id="o-c"></output></span><input id="s-c" type="range" min="0" max="0.99" step="0.01"></label>
+          <label><span><b>b</b> max step excess (m)<output id="o-b"></output></span><input id="s-b" type="range" min="0.5" max="15" step="0.5"></label>
+          <p class="small">Preset values are illustrative, not the paper's fitted parameters. "Large" and "small radius" put a 35&nbsp;m trip at expansion radii of 1.84&nbsp;m and 0.24&nbsp;m.</p>
+        </div>
+        <div style="display:grid;gap:14px;min-width:0">
+          <span class="badge" id="badge"><i></i><span></span></span>
+          <div id="epl" role="img" aria-label="Plot of the excess path length distribution for the chosen parameters"></div>
+          <div class="readout">
+            <div><b id="r-zero"></b><span>chance the path is exactly optimal, (1 − p)<sup>n</sup></span></div>
+            <div><b id="r-mean"></b><span>mean excess path length, np/λ</span></div>
+            <div><b id="r-odds"></b><span>odds a step adds nothing, against the (n − 1)/2 needed</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="videos">
+    <div class="wrap stack">
+      <div class="head">
+        <p class="eyebrow">Field testing</p>
+        <h2>On real ground</h2>
+        <p class="muted">The field robot is a Clearpath Husky A200 with an Ouster OS1-64 lidar, a VectorNav VN-100 IMU and NovAtel RTK GNSS/INS. Maps come from LIO-SAM on a teleoperated survey drive, and MUONS then plans on that map. Across rocks, gravel and grass, with slopes that rule out the straight line, it completed all 30 field trials.</p>
+      </div>
+      <div class="grid2">
+        <figure>
+          <img src="media/field-start.jpg" width="1400" height="1120" alt="The Husky robot with a sensor mast on a grassy, rocky slope below autumn trees" loading="lazy">
+          <figcaption>Start pose for one of the field tasks.</figcaption>
+        </figure>
+        <figure>
+          <img src="media/husky-sensors.jpg" width="1100" height="880" alt="The Husky on a rocky slope, with labels pointing to the 3D lidar, GNSS antenna, GNSS/INS and IMU" loading="lazy">
+          <figcaption>The Husky's sensors, on the rock field between start and goal.</figcaption>
+        </figure>
+      </div>
+      <div class="vids">
+        <figure>
+          <video data-src="media/husky-field.mp4" poster="media/husky-field.jpg" autoplay loop muted playsinline width="432" height="768" aria-label="The Husky robot driving across a mown grass field"></video>
+          <figcaption>Grass field (2× speed).</figcaption>
+        </figure>
+        <figure>
+          <video data-src="media/husky-trail.mp4" poster="media/husky-trail.jpg" autoplay loop muted playsinline width="432" height="768" aria-label="The Husky robot driving along a dirt trail through woods toward the camera"></video>
+          <figcaption>Woodland trail (2× speed).</figcaption>
+        </figure>
+        <div class="prose">
+          <h3>Next</h3>
+          <p class="muted">Code release is in preparation. Next steps include tuning planner parameters automatically in randomized simulation, and planning for costs other than distance, such as risk, time or energy. We expect the theory to extend to these, since it makes no geometric assumptions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap stack" id="cite">
+    <div class="head">
+      <p class="eyebrow">Papers</p>
+      <h2>Read more</h2>
+    </div>
+    <ul class="papers">
+      <li><em>Performance Characterization of a Point-Cloud-Based Path Planner in Off-Road Terrain</em><span>C. D. Majhor and J. P. Bos. Journal of Field Robotics 43(2), 695–716, 2026. <a href="https://doi.org/10.1002/rob.70059">doi:10.1002/rob.70059</a></span></li>
+      <li><em>Can We Get There Faster: Tuning Sample-Based Path Planners</em><span>C. Cornwall, C. Majhor, L. Schexnaydre, I. Mattson and J. P. Bos. IEEE Robotics and Automation Letters 11(6), 7238–7245, 2026. <a href="https://doi.org/10.1109/LRA.2026.3685923">doi:10.1109/LRA.2026.3685923</a></span></li>
+      <li><em>Multifractal Terrain Generation for Evaluating Autonomous Off-Road Ground Vehicles</em><span>C. D. Majhor and J. P. Bos. Journal of Autonomous Vehicles and Systems 5(2), 021003, 2025. <a href="https://doi.org/10.1115/1.4067769">doi:10.1115/1.4067769</a></span></li>
+      <li><em>Unreal as a Simulation Environment for Off-Road Autonomy</em><span>P. Young, S. Kysar and J. P. Bos. Proc. SPIE 11415, 2020. <a href="https://doi.org/10.1117/12.2559006">doi:10.1117/12.2559006</a></span></li>
+    </ul>
+    <div class="bib">
+      <button type="button" data-copy="bibtex">Copy</button>
+<pre id="bibtex">@article{majhor2026performance,
+  title   = {Performance Characterization of a Point-Cloud-Based Path Planner in Off-Road Terrain},
+  author  = {Majhor, Casey D. and Bos, Jeremy P.},
+  journal = {Journal of Field Robotics},
+  volume  = {43}, number = {2}, pages = {695--716}, year = {2026},
+  doi     = {10.1002/rob.70059}
+}
+
+@article{cornwall2026faster,
+  title   = {Can We Get There Faster: Tuning Sample-Based Path Planners},
+  author  = {Cornwall, Chaz and Majhor, Casey and Schexnaydre, Logan and Mattson, Ian and Bos, Jeremy P.},
+  journal = {IEEE Robotics and Automation Letters},
+  volume  = {11}, number = {6}, pages = {7238--7245}, year = {2026},
+  doi     = {10.1109/LRA.2026.3685923}
+}</pre>
+    </div>
+  </section>
+
+  <section class="band notes">
+    <div class="wrap">
+      <p class="small">Supported by the SMART Scholarship Program (USD/R&amp;E, National Defense Education Program BA-1) and by the Automotive Research Center under Cooperative Agreement W56HZV-19-2-0001 with the U.S. Army CCDC Ground Vehicle Systems Center. These views do not represent those of the sponsors. Thanks also to Sam Kysar, Parker Young, Zach Jeffries, Ian Mattson and Jake Carter.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <img class="logo" src="../assets/RASL/flame-avatar-square-transparent.svg" alt="RASL logo" width="72" height="72" loading="lazy">
+  <p><a href="../">Robust Autonomous Systems Laboratory</a> · Michigan Tech · <a href="https://github.com/Robust-Autonomous-Systems-Laboratory">GitHub</a></p>
+</footer>
+<div id="tip" hidden></div>
+
+<script>
+// Videos load when they scroll into view; with reduced motion they show controls instead of autoplaying.
+(function () {
+  var vids = document.querySelectorAll('video[data-src]');
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function load(v) { if (still) { v.autoplay = false; v.controls = true; } v.src = v.dataset.src; v.removeAttribute('data-src'); }
+  if (!('IntersectionObserver' in window)) { vids.forEach(load); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+  }, { rootMargin: '200px' });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+
+var tip = document.getElementById('tip');
+function showTip(html, x, y) {
+  tip.innerHTML = html; tip.hidden = false;
+  var r = tip.getBoundingClientRect(), L = x + 14, T = y + 14;
+  if (L + r.width > innerWidth - 8) L = x - r.width - 14;
+  if (T + r.height > innerHeight - 8) T = y - r.height - 14;
+  tip.style.left = Math.max(8, L) + 'px'; tip.style.top = Math.max(8, T) + 'px';
+}
+function hideTip() { tip.hidden = true; }
+
+// Sim-vs-field ratio chart: one log axis, a dot per source, joined per row.
+(function () {
+  var ROWS = [
+    { k: 'Planning time', s: 'best ÷ typical', sim: 0.27, field: 0.28 },
+    { k: 'Planning time', s: 'worst ÷ typical', sim: 4.44, field: 5.46 },
+    { k: 'Excess path length', s: 'best ÷ typical', sim: 0.66, field: 0.60 },
+    { k: 'Excess path length', s: 'worst ÷ typical', sim: 3.55, field: 1.76 }
+  ];
+  var el = document.getElementById('ratio');
+  function draw() {
+    var W = Math.max(300, Math.round(el.clientWidth)), narrow = W < 620;
+    var left = narrow ? 8 : 230, right = 24, top = 30, rowH = narrow ? 62 : 48, H = top + ROWS.length * rowH + 6;
+    var lo = Math.log(0.2), hi = Math.log(8), pw = W - left - right;
+    var x = function (v) { return left + pw * (Math.log(v) - lo) / (hi - lo); };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">';
+    [0.25, 0.5, 1, 2, 4, 8].forEach(function (t) {
+      s += '<line x1="' + x(t) + '" x2="' + x(t) + '" y1="' + (top - 8) + '" y2="' + (H - 4) + '" stroke="var(--line)" stroke-width="' + (t === 1 ? 2 : 1) + '"/>';
+      s += '<text class="tick" x="' + x(t) + '" y="' + (top - 14) + '" text-anchor="middle">' + t + '×</text>';
+    });
+    ROWS.forEach(function (r, i) {
+      var y = top + i * rowH + (narrow ? 38 : rowH / 2);
+      s += '<g class="row" data-i="' + i + '"><rect x="0" y="' + (y - rowH / 2 - (narrow ? 12 : 0)) + '" width="' + W + '" height="' + rowH + '" fill="transparent"/>';
+      if (narrow) s += '<text class="rl" x="' + left + '" y="' + (y - 18) + '">' + r.k + ', ' + r.s + '</text>';
+      else s += '<text class="rl" x="' + (left - 14) + '" y="' + (y - 3) + '" text-anchor="end">' + r.k + '</text><text x="' + (left - 14) + '" y="' + (y + 13) + '" text-anchor="end">' + r.s + '</text>';
+      s += '<line x1="' + x(r.sim) + '" x2="' + x(r.field) + '" y1="' + y + '" y2="' + y + '" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round" opacity=".5"/>';
+      var a = r.sim <= r.field;
+      [['sim', r.sim, a ? 'end' : 'start', a ? -11 : 11], ['field', r.field, a ? 'start' : 'end', a ? 11 : -11]].forEach(function (d) {
+        s += '<circle cx="' + x(d[1]) + '" cy="' + y + '" r="6.5" fill="var(--' + d[0] + ')" stroke="var(--paper)" stroke-width="2"/>';
+        s += '<text class="tick" x="' + (x(d[1]) + d[3]) + '" y="' + (y + 4) + '" text-anchor="' + d[2] + '" style="fill:var(--text)">' + d[1].toFixed(2) + '</text>';
+      });
+      s += '</g>';
+    });
+    el.innerHTML = s + '</svg>';
+    el.querySelectorAll('.row').forEach(function (g) {
+      var r = ROWS[+g.dataset.i];
+      var html = '<b>' + r.k + ', ' + r.s + '</b><br>Simulation ' + r.sim.toFixed(2) + '× · Field ' + r.field.toFixed(2) + '×';
+      g.addEventListener('mousemove', function (e) { showTip(html, e.clientX, e.clientY); });
+      g.addEventListener('mouseleave', hideTip);
+    });
+  }
+  draw();
+  var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 120); });
+})();
+
+// EPL explorer: f_V(v) = (1-p)^n δ(v) + Σ_k B(k;n,p) Γ(v;k,λ), p = (1-c)^m, λ = m/b  (RA-L 2026, Eq. 14).
+var EPL = (function () {
+  function lgamma(z) { // Lanczos, g = 7
+    var g = 7, C = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+    if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z);
+    z -= 1; var a = C[0], t = z + g + 0.5;
+    for (var i = 1; i < 9; i++) a += C[i] / (z + i);
+    return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(a);
+  }
+  function model(n, m, c, b) {
+    var p = Math.pow(1 - c, m), lam = m / b, w = [];
+    for (var k = 1; k <= n; k++) {
+      var lw;
+      if (p >= 1) lw = k === n ? 0 : -Infinity;
+      else if (p <= 0) lw = -Infinity;
+      else lw = lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1) + k * Math.log(p) + (n - k) * Math.log(1 - p);
+      w.push(lw);
+    }
+    return { n: n, p: p, lam: lam, mass: p >= 1 ? 0 : Math.pow(1 - p, n), lw: w, mean: n * p / lam, sd: Math.sqrt(n * p * (2 - p)) / lam };
+  }
+  function density(M, v) {
+    if (v <= 0) return M.lw[0] === -Infinity ? 0 : Math.exp(M.lw[0]) * M.lam; // only k = 1 is non-zero at v = 0
+    var s = 0, lv = Math.log(v), ll = Math.log(M.lam);
+    for (var k = 1; k <= M.n; k++) {
+      var lw = M.lw[k - 1]; if (lw === -Infinity) continue;
+      s += Math.exp(lw + k * ll + (k - 1) * lv - M.lam * v - lgamma(k));
+    }
+    return s;
+  }
+  function modeAtZero(M) { return M.p <= 2 / (M.n + 1); } // Theorem 1: (1-c)^m <= (1 + (n-1)/2)^-1
+  return { model: model, density: density, modeAtZero: modeAtZero };
+})();
+
+(function () {
+  var S = { n: document.getElementById('s-n'), m: document.getElementById('s-m'), c: document.getElementById('s-c'), b: document.getElementById('s-b') };
+  var O = { n: document.getElementById('o-n'), m: document.getElementById('o-m'), c: document.getElementById('o-c'), b: document.getElementById('o-b') };
+  var el = document.getElementById('epl'), badge = document.getElementById('badge'), presets = document.querySelectorAll('.presets button');
+  function set(vals) { ['n', 'm', 'c', 'b'].forEach(function (k, i) { S[k].value = vals[i]; }); }
+  function pct(x) { return x >= 0.995 ? '>99%' : x < 0.005 && x > 0 ? '<1%' : Math.round(100 * x) + '%'; }
+  function draw() {
+    var n = +S.n.value, m = +S.m.value, c = +S.c.value, b = +S.b.value;
+    O.n.textContent = n; O.m.textContent = m; O.c.textContent = c.toFixed(2); O.b.textContent = b + ' m';
+    presets.forEach(function (btn) {
+      var v = btn.dataset.p.split(',').map(Number);
+      btn.setAttribute('aria-pressed', String(v[0] === n && v[1] === m && Math.abs(v[2] - c) < 1e-9 && v[3] === b));
+    });
+    var M = EPL.model(n, m, c, b);
+    var W = Math.max(300, Math.round(el.clientWidth)), H = W < 560 ? 220 : 260, L = 14, R = 14, T = 26, B = 40, pw = W - L - R, ph = H - T - B;
+    var xmax = Math.max(M.mean + 4.5 * M.sd, 3 / M.lam, 0.5);
+    var N = 240, pts = [], ymax = 0;
+    for (var i = 0; i <= N; i++) { var v = xmax * i / N, d = EPL.density(M, v); pts.push([v, d]); if (d > ymax) ymax = d; }
+    ymax = ymax > 0 ? ymax * 1.12 : 1;
+    var X = function (v) { return L + pw * v / xmax; }, Y = function (d) { return T + ph - ph * d / ymax; };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">';
+    var step = Math.pow(10, Math.floor(Math.log10(xmax / 4))); [1, 2, 5, 10].some(function (k) { if (xmax / (step * k) <= (W < 560 ? 5 : 8)) { step *= k; return true; } });
+    for (var t = 0; t <= xmax + 1e-9; t += step) {
+      s += '<line x1="' + X(t) + '" x2="' + X(t) + '" y1="' + T + '" y2="' + (T + ph) + '" stroke="var(--line)"/>';
+      s += '<text class="tick" x="' + X(t) + '" y="' + (T + ph + 16) + '" text-anchor="middle">' + (+t.toFixed(2)) + '</text>';
+    }
+    s += '<text x="' + (L + pw / 2) + '" y="' + (H - 4) + '" text-anchor="middle">Excess path length (m)</text>';
+    if (ymax > 0 && pts.some(function (q) { return q[1] > 0; })) {
+      var d = 'M' + X(0) + ',' + Y(0) + pts.map(function (q) { return 'L' + X(q[0]).toFixed(1) + ',' + Y(q[1]).toFixed(1); }).join('') + 'L' + X(xmax) + ',' + Y(0) + 'Z';
+      s += '<path d="' + d + '" fill="var(--sim)" fill-opacity=".16" stroke="none"/>';
+      s += '<polyline points="' + pts.map(function (q) { return X(q[0]).toFixed(1) + ',' + Y(q[1]).toFixed(1); }).join(' ') + '" fill="none" stroke="var(--sim)" stroke-width="2" stroke-linejoin="round"/>';
+    }
+    s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + (T + ph) + '" y2="' + (T + ph) + '" stroke="var(--ink-3)"/>';
+    if (M.mass > 0.001) { // probability mass at zero: a stem, labelled with its probability (not on the density scale)
+      s += '<line x1="' + X(0) + '" x2="' + X(0) + '" y1="' + (T + ph) + '" y2="' + (T + 4) + '" stroke="var(--field)" stroke-width="3" stroke-linecap="round"/>';
+      s += '<circle cx="' + X(0) + '" cy="' + (T + 4) + '" r="5.5" fill="var(--field)" stroke="var(--paper)" stroke-width="2"/>';
+      s += '<text x="' + (X(0) + 10) + '" y="' + (T + 8) + '" style="fill:var(--text);font-weight:600">' + pct(M.mass) + ' exactly optimal</text>';
+    }
+    el.innerHTML = s + '</svg>';
+    var yes = EPL.modeAtZero(M);
+    badge.className = 'badge' + (yes ? ' yes' : '');
+    badge.lastElementChild.textContent = yes ? 'Theorem 1 holds: most likely excess is zero' : 'Theorem 1 fails: the mode moves away from zero';
+    document.getElementById('r-zero').textContent = pct(M.mass);
+    document.getElementById('r-mean').textContent = M.mean < 10 ? M.mean.toFixed(2) + ' m' : M.mean.toFixed(1) + ' m';
+    var odds = M.p > 0 ? (1 - M.p) / M.p : Infinity;
+    document.getElementById('r-odds').textContent = (odds === Infinity ? '∞' : odds >= 100 ? Math.round(odds) : odds.toFixed(1)) + ' vs ' + ((n - 1) / 2).toFixed(1);
+  }
+  presets.forEach(function (btn) { btn.addEventListener('click', function () { set(btn.dataset.p.split(',')); draw(); }); });
+  Object.keys(S).forEach(function (k) { S[k].addEventListener('input', draw); });
+  set([19, 4, 0.5, 6]); draw();
+  var t; addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 120); });
+})();
+
+// BibTeX copy
+document.querySelectorAll('[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var text = document.getElementById(btn.dataset.copy).textContent;
+    function done() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); }
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+    else { var r = document.createRange(); r.selectNodeContents(document.getElementById(btn.dataset.copy)); getSelection().removeAllRanges(); getSelection().addRange(r); }
+  });
+});
+</script>
+</body>
+</html>
